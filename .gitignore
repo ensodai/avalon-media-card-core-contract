@@ -1,27 +1,56 @@
-# Compiled class file
-*.class
+# Gradle
+.gradle/
+build/
+**/build/
+!/build.gradle.kts
+!/settings.gradle.kts
 
-# Log file
+# Kotlin
+.kotlin/
+*.konan
+**/konan/
+
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+.navigation/
+
+# Android
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+cmake-build-*/
+
+# iOS / Xcode / CocoaPods (для KMP iOS таргетов)
+*.xcworkspace
+xcuserdata/
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+.cocoapods/
+Pods/
+Podfile.lock
+
+# OS-specific
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.directory
+
+# Logs
 *.log
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Package Files
 *.jar
 *.war
-*.nar
 *.ear
 *.zip
 *.tar.gz
 *.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
-
-# Kotlin Gradle plugin data, see https://kotlinlang.org/docs/whatsnew20.html#new-directory-for-kotlin-data-in-gradle-projects
-.kotlin/
