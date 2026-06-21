@@ -84,17 +84,6 @@ interface UiContainerBuilder {
         add(UiMovieCarousel(widgetId, title, items, loadMoreAction, titleAction, defaultSpan, id, modifiers))
     }
 
-    fun movieGrid(
-        widgetId: String,
-        items: List<MovieCarouselItem>,
-        loadMoreAction: UiAction? = null,
-        id: Uuid? = null,
-        block: (ModifierBuilder.() -> Unit)? = null
-    ) {
-        val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
-        add(UiMovieGrid(widgetId, items, loadMoreAction, 4, id, modifiers))
-    }
-
     fun mediaHeader(
         title: String,
         subtitle: String? = null,

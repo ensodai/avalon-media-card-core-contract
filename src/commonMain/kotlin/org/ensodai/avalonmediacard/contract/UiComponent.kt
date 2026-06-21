@@ -104,17 +104,6 @@ data class UiMovieCarousel(
     override val modifiers: List<UiModifier> = emptyList()
 ) : UiComponent(), UiWidget
 
-@Serializable
-data class UiMovieGrid(
-    override val widgetId: String,
-    val items: List<MovieCarouselItem>,
-    val loadMoreAction: UiAction? = null,
-    override val defaultSpan: Int = 4,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent(), UiWidget {
-    override val title: String = ""
-}
 
 @Serializable
 data class UiMediaHeader(
