@@ -26,4 +26,12 @@ sealed interface Screen {
         val title: String,
         val params: Map<String, String> = emptyMap()
     ) : Screen
+
+    @Serializable
+    data class MediaList(
+        val mediaId: String,
+        val catalogId: String,
+        val listType: String,
+        val title: String
+    ) : Screen
 }

@@ -56,6 +56,7 @@ data class MediaMetadata(
     val subtitle: String? = null,
     val description: String? = null,
     val posterUrl: String? = null,
+    val backgroundUrl: String? = null,
     val rating: String? = null,
     val genres: List<String> = emptyList(),
     val releaseDate: String? = null,
@@ -107,3 +108,6 @@ interface MediaCatalog {
     suspend fun getMediaDetails(mediaId: String): MediaMetadata
     suspend fun getPersonDetails(personId: String): PersonMetadata
 }
+
+
+

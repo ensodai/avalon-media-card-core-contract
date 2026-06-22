@@ -104,6 +104,24 @@ data class UiMovieCarousel(
     override val modifiers: List<UiModifier> = emptyList()
 ) : UiComponent(), UiWidget
 
+@Serializable
+data class UiMovieGrid(
+    override val widgetId: String,
+    val items: List<MovieCarouselItem>,
+    val loadMoreAction: UiAction? = null,
+    override val defaultSpan: Int = 4,
+    override val id: Uuid? = null,
+    override val modifiers: List<UiModifier> = emptyList(),
+    override val title: String = ""
+) : UiComponent(), UiWidget
+
+
+@Serializable
+data class MediaRating(
+    val source: String,
+    val value: String,
+    val colorHex: String? = null
+)
 
 @Serializable
 data class UiMediaHeader(
@@ -111,6 +129,7 @@ data class UiMediaHeader(
     val subtitle: String? = null,
     val tagline: String? = null,
     val rating: Double? = null,
+    val ratings: List<MediaRating> = emptyList(),
     val genres: List<String> = emptyList(),
     val releaseDate: String? = null,
     val posterUrl: String? = null,
@@ -118,6 +137,7 @@ data class UiMediaHeader(
     val directorName: String? = null,
     val directorId: String? = null,
     val directorImageUrl: String? = null,
+    val trailerUrl: String? = null,
     val isLoading: Boolean = false,
     val catalogId: String? = null,
     override val id: Uuid? = null,
@@ -275,3 +295,29 @@ data class UiActionCommand(
     val commandClass: String,
     val payloadJson: String
 ) : UiAction()
+
+@Serializable
+enum class WidgetType {
+    Carousel, Grid, Cast, DetailsHeader, PersonHeader
+}
+
+@Serializable
+sealed class WidgetState {
+    @Serializable
+    data object Loading : WidgetState()
+    @Serializable
+    data class Success(val component: UiComponent) : WidgetState()
+    @Serializable
+    data class Error(val message: String, val retryAction: UiAction? = null) : WidgetState()
+}
+
+@Serializable
+data class UiStateWidget(
+    override val widgetId: String,
+    override val title: String,
+    val state: WidgetState,
+    val expectedType: WidgetType,
+    override val defaultSpan: Int = 4,
+    override val id: Uuid? = null,
+    override val modifiers: List<UiModifier> = emptyList()
+) : UiComponent(), UiWidget

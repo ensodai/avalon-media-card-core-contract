@@ -84,11 +84,24 @@ interface UiContainerBuilder {
         add(UiMovieCarousel(widgetId, title, items, loadMoreAction, titleAction, defaultSpan, id, modifiers))
     }
 
+    fun movieGrid(
+        widgetId: String,
+        items: List<MovieCarouselItem>,
+        loadMoreAction: UiAction? = null,
+        defaultSpan: Int = 4,
+        id: Uuid? = null,
+        block: (ModifierBuilder.() -> Unit)? = null
+    ) {
+        val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
+        add(UiMovieGrid(widgetId, items, loadMoreAction, defaultSpan, id, modifiers))
+    }
+
     fun mediaHeader(
         title: String,
         subtitle: String? = null,
         tagline: String? = null,
         rating: Double? = null,
+        ratings: List<MediaRating> = emptyList(),
         genres: List<String> = emptyList(),
         releaseDate: String? = null,
         posterUrl: String? = null,
@@ -96,13 +109,14 @@ interface UiContainerBuilder {
         directorName: String? = null,
         directorId: String? = null,
         directorImageUrl: String? = null,
+        trailerUrl: String? = null,
         isLoading: Boolean = false,
         catalogId: String? = null,
         id: Uuid? = null,
         block: (ModifierBuilder.() -> Unit)? = null
     ) {
         val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
-        add(UiMediaHeader(title, subtitle, tagline, rating, genres, releaseDate, posterUrl, backgroundUrl, directorName, directorId, directorImageUrl, isLoading, catalogId, id, modifiers))
+        add(UiMediaHeader(title, subtitle, tagline, rating, ratings, genres, releaseDate, posterUrl, backgroundUrl, directorName, directorId, directorImageUrl, trailerUrl, isLoading, catalogId, id, modifiers))
     }
 
     fun personHeader(
@@ -157,6 +171,19 @@ interface UiContainerBuilder {
     ) {
         val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
         add(UiImageGallery(title, imageUrls, id, modifiers))
+    }
+
+    fun stateWidget(
+        widgetId: String,
+        title: String,
+        state: WidgetState,
+        expectedType: WidgetType,
+        defaultSpan: Int = 4,
+        id: Uuid? = null,
+        block: (ModifierBuilder.() -> Unit)? = null
+    ) {
+        val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
+        add(UiStateWidget(widgetId, title, state, expectedType, defaultSpan, id, modifiers))
     }
 }
 

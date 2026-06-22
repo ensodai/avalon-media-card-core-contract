@@ -103,6 +103,17 @@ interface ActionBus {
 }
 
 /**
+ * Предоставляет плагинам доступ к фильмам, сериям и оценкам пользователей.
+ */
+interface UserMovieProvider {
+    suspend fun getUserMovies(userId: String): List<UserMovieItem>
+    suspend fun updateUserMovie(item: UserMovieItem): Boolean
+    suspend fun deleteUserMovie(userId: String, mediaId: String): Boolean
+    suspend fun getUserEpisodes(userId: String, mediaId: String): List<UserEpisodeItem>
+    suspend fun updateUserEpisode(item: UserEpisodeItem): Boolean
+}
+
+/**
  * Контекст, предоставляемый плагину ядром при инициализации.
  */
 class PluginContext(
@@ -112,6 +123,7 @@ class PluginContext(
     val dispatcher: PluginCallDispatcher,
     val actionBus: ActionBus,
     val catalog: MediaCatalog,
+    val userMovies: UserMovieProvider,
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 ) {
     private val _widgetProviders = mutableListOf<WidgetProvider>()
