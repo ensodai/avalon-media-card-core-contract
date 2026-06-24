@@ -8,6 +8,9 @@ sealed interface Screen {
     data object Dashboard : Screen
 
     @Serializable
+    data object Integrations : Screen
+
+    @Serializable
     data class PluginHome(val pluginId: String) : Screen
 
     @Serializable

@@ -2,8 +2,7 @@ package org.ensodai.avalonmediacard.contract
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.rpc.annotations.Rpc
-import kotlinx.serialization.Serializable
-import kotlin.uuid.Uuid
+import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 
 /**
  * Главный RPC-контракт между Compose Wasm клиентом и Ktor бэкенд-ядром.
@@ -46,27 +45,3 @@ interface AvalonRpcService {
      */
     suspend fun saveWidgetLayout(settings: List<WidgetSettingsData>): Boolean
 }
-
-@Serializable
-data class SidebarItem(
-    val id: String,
-    val title: String,
-    val iconName: String
-)
-
-@Serializable
-data class UiActionResponse(
-    val success: Boolean,
-    val message: String? = null,
-    val nextAction: UiAction? = null,
-    val componentUpdates: Map<Uuid, UiComponent> = emptyMap()
-)
-
-@Serializable
-data class WidgetSettingsData(
-    val widgetId: String,
-    val isVisible: Boolean,
-    val orderIndex: Int,
-    val widthSpan: Int
-)
-

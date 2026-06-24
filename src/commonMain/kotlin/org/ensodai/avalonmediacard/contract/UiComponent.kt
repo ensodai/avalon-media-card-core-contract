@@ -9,201 +9,11 @@ sealed class UiComponent {
     abstract val modifiers: List<UiModifier>
 }
 
-@Serializable
-data class UiColumn(
-    val children: List<UiComponent>,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiRow(
-    val children: List<UiComponent>,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiBox(
-    val children: List<UiComponent>,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiText(
-    val text: String,
-    val style: UiTextStyle = UiTextStyle.Body,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiImage(
-    val url: String,
-    val aspectRatio: Float? = null,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiButton(
-    val text: String,
-    val action: UiAction,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiLazyRow(
-    val children: List<UiComponent>,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiSpacer(
-    val sizeDp: Int,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
 interface UiWidget {
     val widgetId: String
     val title: String
     val defaultSpan: Int
 }
-
-@Serializable
-data class UiWidgetContainer(
-    override val widgetId: String,
-    override val title: String,
-    override val defaultSpan: Int = 2, // Ширина в колонках от 1 до 4
-    val children: List<UiComponent>,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent(), UiWidget
-
-@Serializable
-data class MovieCarouselItem(
-    val mediaId: String,
-    val catalogId: String,
-    val title: String,
-    val posterUrl: String
-)
-
-@Serializable
-data class UiMovieCarousel(
-    override val widgetId: String,
-    override val title: String,
-    val items: List<MovieCarouselItem>,
-    val loadMoreAction: UiAction? = null,
-    val titleAction: UiAction? = null,
-    override val defaultSpan: Int = 4, // По умолчанию занимает всю ширину
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent(), UiWidget
-
-@Serializable
-data class UiMovieGrid(
-    override val widgetId: String,
-    val items: List<MovieCarouselItem>,
-    val loadMoreAction: UiAction? = null,
-    override val defaultSpan: Int = 4,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList(),
-    override val title: String = ""
-) : UiComponent(), UiWidget
-
-
-@Serializable
-data class MediaRating(
-    val source: String,
-    val value: String,
-    val colorHex: String? = null
-)
-
-@Serializable
-data class UiMediaHeader(
-    val title: String,
-    val subtitle: String? = null,
-    val tagline: String? = null,
-    val rating: Double? = null,
-    val ratings: List<MediaRating> = emptyList(),
-    val genres: List<String> = emptyList(),
-    val releaseDate: String? = null,
-    val posterUrl: String? = null,
-    val backgroundUrl: String? = null,
-    val directorName: String? = null,
-    val directorId: String? = null,
-    val directorImageUrl: String? = null,
-    val trailerUrl: String? = null,
-    val isLoading: Boolean = false,
-    val catalogId: String? = null,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiPersonHeader(
-    val name: String,
-    val knownForDepartment: String? = null,
-    val birthday: String? = null,
-    val deathday: String? = null,
-    val placeOfBirth: String? = null,
-    val profileUrl: String? = null,
-    val isLoading: Boolean = false,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiTextSection(
-    val title: String,
-    val text: String,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class TrailerItem(
-    val name: String,
-    val videoUrl: String,
-    val type: String? = null
-)
-
-@Serializable
-data class UiMediaTrailers(
-    val title: String = "Трейлеры и доп. материалы",
-    val videos: List<TrailerItem> = emptyList(),
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class CastMemberItem(
-    val id: String,
-    val name: String,
-    val character: String? = null,
-    val profileUrl: String? = null,
-    val catalogId: String
-)
-
-@Serializable
-data class UiMediaCast(
-    val title: String = "В главных ролях",
-    val members: List<CastMemberItem> = emptyList(),
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
-
-@Serializable
-data class UiImageGallery(
-    val title: String = "Фотографии",
-    val imageUrls: List<String> = emptyList(),
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
 
 // --- Стили Текста ---
 
@@ -297,27 +107,13 @@ data class UiActionCommand(
 ) : UiAction()
 
 @Serializable
-enum class WidgetType {
-    Carousel, Grid, Cast, DetailsHeader, PersonHeader
-}
+data class UiActionSetRating(
+    val mediaId: String,
+    val rating: Int
+) : UiAction()
 
 @Serializable
-sealed class WidgetState {
-    @Serializable
-    data object Loading : WidgetState()
-    @Serializable
-    data class Success(val component: UiComponent) : WidgetState()
-    @Serializable
-    data class Error(val message: String, val retryAction: UiAction? = null) : WidgetState()
-}
-
-@Serializable
-data class UiStateWidget(
-    override val widgetId: String,
-    override val title: String,
-    val state: WidgetState,
-    val expectedType: WidgetType,
-    override val defaultSpan: Int = 4,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent(), UiWidget
+data class UiActionSetStatus(
+    val mediaId: String,
+    val status: MediaStatus
+) : UiAction()

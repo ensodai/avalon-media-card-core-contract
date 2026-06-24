@@ -4,11 +4,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import io.ktor.client.HttpClient
+import org.ensodai.avalonmediacard.contract.plugins.ActionHandler
+import org.ensodai.avalonmediacard.contract.plugins.StreamProvider
+import org.ensodai.avalonmediacard.contract.plugins.UserMovieProvider
+import org.ensodai.avalonmediacard.contract.plugins.WidgetProvider
 
 /**
  * Базовый интерфейс для любого плагина в системе Avalon.
@@ -49,33 +52,6 @@ data class PluginCommandInfo(
     val parameters: List<PluginParameter> = emptyList()
 )
 
-
-
-/**
- * Возможность плагина интегрировать UI-виджеты в интерфейс ядра.
- */
-interface WidgetProvider {
-    fun renderWidget(target: WidgetTarget): Flow<List<UiComponent>>
-}
-
-/**
- * Возможность плагина предоставлявать видеопотоки (ссылки, стриминг, торренты).
- */
-interface StreamProvider {
-    fun findStreams(
-        mediaId: String,
-        season: Int? = null,
-        episode: Int? = null
-    ): Flow<MediaStream>
-}
-
-/**
- * Возможность плагина обрабатывать действия (клики, пагинацию, кастомные экшены).
- */
-fun interface ActionHandler {
-    suspend fun handleAction(action: UiAction): UiActionResponse
-}
-
 /**
  * Диспетчер для синхронных (suspend) запросов данных между плагинами.
  */
@@ -100,17 +76,6 @@ fun interface PluginCallHandler {
 interface ActionBus {
     val actions: Flow<UiAction>
     suspend fun post(action: UiAction)
-}
-
-/**
- * Предоставляет плагинам доступ к фильмам, сериям и оценкам пользователей.
- */
-interface UserMovieProvider {
-    suspend fun getUserMovies(userId: String): List<UserMovieItem>
-    suspend fun updateUserMovie(item: UserMovieItem): Boolean
-    suspend fun deleteUserMovie(userId: String, mediaId: String): Boolean
-    suspend fun getUserEpisodes(userId: String, mediaId: String): List<UserEpisodeItem>
-    suspend fun updateUserEpisode(item: UserEpisodeItem): Boolean
 }
 
 /**
@@ -176,82 +141,3 @@ interface PluginLogger {
     fun warn(message: String)
     fun error(message: String, throwable: Throwable? = null)
 }
-/**
- * Целевые виджеты интеграции компонентов плагина в интерфейс ядра.
- */
-@Serializable
-sealed interface WidgetTarget {
-    @Serializable
-    data object HomeWidget : WidgetTarget
-
-    @Serializable
-    data class SearchResults(val query: String) : WidgetTarget
-
-    // --- Экран деталей медиа (фильм/сериал) ---
-    @Serializable
-    data class MediaHeader(val mediaId: String) : WidgetTarget
-
-    @Serializable
-    data class MediaDescription(val mediaId: String) : WidgetTarget
-
-    @Serializable
-    data class MediaTrailers(val mediaId: String) : WidgetTarget
-
-    @Serializable
-    data class MediaCast(val mediaId: String) : WidgetTarget
-
-    @Serializable
-    data class MediaRecommendations(val mediaId: String) : WidgetTarget
-
-    @Serializable
-    data class MediaSimilar(val mediaId: String) : WidgetTarget
-
-    // --- Экран деталей персоны (актера/режиссера) ---
-    @Serializable
-    data class PersonHeader(val personId: String) : WidgetTarget
-
-    @Serializable
-    data class PersonImages(val personId: String) : WidgetTarget
-
-    @Serializable
-    data class PersonBio(val personId: String) : WidgetTarget
-
-    @Serializable
-    data class PersonActingCredits(val personId: String) : WidgetTarget
-
-    @Serializable
-    data class PersonDirectingCredits(val personId: String) : WidgetTarget
-
-    @Serializable
-    data class MediaList(val movieId: String, val listType: String) : WidgetTarget
-
-    // Резервный кастом для непредвиденных интеграций сторонних плагинов
-    @Serializable
-    data class Custom(val name: String, val params: Map<String, String> = emptyMap()) : WidgetTarget
-}
-
-/**
- * Тип видеопотока.
- */
-@Serializable
-enum class StreamType {
-    DirectUrl,  // Прямая ссылка на файл (mp4, mkv и др.)
-    Hls,        // Стриминг HLS (.m3u8)
-    Torrent,    // Ссылка на .torrent файл
-    Magnet      // Magnet-ссылка
-}
-
-/**
- * Результат поиска видеопотока.
- */
-@Serializable
-data class MediaStream(
-    val title: String,
-    val url: String,
-    val type: StreamType,
-    val quality: String? = null,
-    val sizeBytes: Long? = null,
-    val sourceName: String,
-    val seeders: Int? = null,     // Применимо для торрентов
-    val leechers: Int? = null     // Применимо для торрентов
-)

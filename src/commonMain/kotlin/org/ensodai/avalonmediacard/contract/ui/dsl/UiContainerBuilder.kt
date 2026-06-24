@@ -1,5 +1,32 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.ui.dsl
 
+import org.ensodai.avalonmediacard.contract.MediaStatus
+import org.ensodai.avalonmediacard.contract.UiAction
+import org.ensodai.avalonmediacard.contract.ui.components.UiButton
+import org.ensodai.avalonmediacard.contract.UiComponent
+import org.ensodai.avalonmediacard.contract.UiTextStyle
+import org.ensodai.avalonmediacard.contract.ui.components.CastMemberItem
+import org.ensodai.avalonmediacard.contract.ui.components.MediaRating
+import org.ensodai.avalonmediacard.contract.ui.components.MovieCarouselItem
+import org.ensodai.avalonmediacard.contract.ui.components.StatusOption
+import org.ensodai.avalonmediacard.contract.ui.components.TrailerItem
+import org.ensodai.avalonmediacard.contract.ui.components.UiImage
+import org.ensodai.avalonmediacard.contract.ui.components.UiImageGallery
+import org.ensodai.avalonmediacard.contract.ui.components.UiMediaCast
+import org.ensodai.avalonmediacard.contract.ui.components.UiMediaHeader
+import org.ensodai.avalonmediacard.contract.ui.components.UiMediaTrailers
+import org.ensodai.avalonmediacard.contract.ui.components.UiMovieCarousel
+import org.ensodai.avalonmediacard.contract.ui.components.UiMovieGrid
+import org.ensodai.avalonmediacard.contract.ui.components.UiPersonHeader
+import org.ensodai.avalonmediacard.contract.ui.components.UiRatingBar
+import org.ensodai.avalonmediacard.contract.ui.components.UiSpacer
+import org.ensodai.avalonmediacard.contract.ui.components.UiStateWidget
+import org.ensodai.avalonmediacard.contract.ui.components.UiStatusSelector
+import org.ensodai.avalonmediacard.contract.ui.components.UiText
+import org.ensodai.avalonmediacard.contract.ui.components.UiTextSection
+import org.ensodai.avalonmediacard.contract.ui.components.UiWidgetContainer
+import org.ensodai.avalonmediacard.contract.ui.components.WidgetState
+import org.ensodai.avalonmediacard.contract.ui.components.WidgetType
 import kotlin.uuid.Uuid
 
 @DslMarker
@@ -116,7 +143,27 @@ interface UiContainerBuilder {
         block: (ModifierBuilder.() -> Unit)? = null
     ) {
         val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
-        add(UiMediaHeader(title, subtitle, tagline, rating, ratings, genres, releaseDate, posterUrl, backgroundUrl, directorName, directorId, directorImageUrl, trailerUrl, isLoading, catalogId, id, modifiers))
+        add(
+            UiMediaHeader(
+                title,
+                subtitle,
+                tagline,
+                rating,
+                ratings,
+                genres,
+                releaseDate,
+                posterUrl,
+                backgroundUrl,
+                directorName,
+                directorId,
+                directorImageUrl,
+                trailerUrl,
+                isLoading,
+                catalogId,
+                id,
+                modifiers
+            )
+        )
     }
 
     fun personHeader(
@@ -131,8 +178,21 @@ interface UiContainerBuilder {
         block: (ModifierBuilder.() -> Unit)? = null
     ) {
         val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
-        add(UiPersonHeader(name, knownForDepartment, birthday, deathday, placeOfBirth, profileUrl, isLoading, id, modifiers))
+        add(
+            UiPersonHeader(
+                name,
+                knownForDepartment,
+                birthday,
+                deathday,
+                placeOfBirth,
+                profileUrl,
+                isLoading,
+                id,
+                modifiers
+            )
+        )
     }
+
     fun textSection(
         title: String,
         text: String,
@@ -181,136 +241,42 @@ interface UiContainerBuilder {
         defaultSpan: Int = 4,
         id: Uuid? = null,
         block: (ModifierBuilder.() -> Unit)? = null
-    ) {
+    )  {
         val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
         add(UiStateWidget(widgetId, title, state, expectedType, defaultSpan, id, modifiers))
     }
-}
 
-class ColumnBuilder(private val id: Uuid?) : UiContainerBuilder {
-    private val children = mutableListOf<UiComponent>()
-    private val modifiers = mutableListOf<UiModifier>()
-
-    override fun add(component: UiComponent) {
-        children.add(component)
+    fun ratingBar(
+        mediaId: String,
+        currentRating: Int?,
+        maxRating: Int = 10,
+        id: Uuid? = null,
+        block: (ModifierBuilder.() -> Unit)? = null
+    ) {
+        val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
+        add(UiRatingBar(mediaId, currentRating, maxRating, id, modifiers))
     }
 
-    fun padding(start: Int = 0, top: Int = 0, end: Int = 0, bottom: Int = 0) {
-        modifiers.add(UiModifierPadding(start, top, end, bottom))
+    fun statusSelector(
+        mediaId: String,
+        currentStatus: MediaStatus?,
+        options: List<StatusOption>,
+        id: Uuid? = null,
+        block: (ModifierBuilder.() -> Unit)? = null
+    ) {
+        val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
+        add(UiStatusSelector(mediaId, currentStatus, options, id, modifiers))
     }
 
-    fun size(width: Int? = null, height: Int? = null) {
-        modifiers.add(UiModifierSize(width, height))
+    fun syncStatus(
+        mediaId: String,
+        statuses: List<org.ensodai.avalonmediacard.contract.SyncServiceStatus>,
+        id: Uuid? = null,
+        block: (ModifierBuilder.() -> Unit)? = null
+    ) {
+        val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
+        add(org.ensodai.avalonmediacard.contract.UiSyncStatus(mediaId, statuses, id, modifiers))
     }
-
-    fun clickable(action: UiAction) {
-        modifiers.add(UiModifierClickable(action))
-    }
-
-    fun clip(cornerRadiusDp: Int) {
-        modifiers.add(UiModifierClipRounded(cornerRadiusDp))
-    }
-
-    fun background(colorHex: String) {
-        modifiers.add(UiModifierBackground(colorHex))
-    }
-
-    fun build() = UiColumn(id = id, children = children, modifiers = modifiers)
-}
-
-class RowBuilder(private val id: Uuid?) : UiContainerBuilder {
-    private val children = mutableListOf<UiComponent>()
-    private val modifiers = mutableListOf<UiModifier>()
-
-    override fun add(component: UiComponent) {
-        children.add(component)
-    }
-
-    fun padding(start: Int = 0, top: Int = 0, end: Int = 0, bottom: Int = 0) {
-        modifiers.add(UiModifierPadding(start, top, end, bottom))
-    }
-
-    fun size(width: Int? = null, height: Int? = null) {
-        modifiers.add(UiModifierSize(width, height))
-    }
-
-    fun clickable(action: UiAction) {
-        modifiers.add(UiModifierClickable(action))
-    }
-
-    fun clip(cornerRadiusDp: Int) {
-        modifiers.add(UiModifierClipRounded(cornerRadiusDp))
-    }
-
-    fun background(colorHex: String) {
-        modifiers.add(UiModifierBackground(colorHex))
-    }
-
-    fun build() = UiRow(id = id, children = children, modifiers = modifiers)
-}
-
-class BoxBuilder(private val id: Uuid?) : UiContainerBuilder {
-    private val children = mutableListOf<UiComponent>()
-    private val modifiers = mutableListOf<UiModifier>()
-
-    override fun add(component: UiComponent) {
-        children.add(component)
-    }
-
-    fun padding(start: Int = 0, top: Int = 0, end: Int = 0, bottom: Int = 0) {
-        modifiers.add(UiModifierPadding(start, top, end, bottom))
-    }
-
-    fun size(width: Int? = null, height: Int? = null) {
-        modifiers.add(UiModifierSize(width, height))
-    }
-
-    fun clickable(action: UiAction) {
-        modifiers.add(UiModifierClickable(action))
-    }
-
-    fun clip(cornerRadiusDp: Int) {
-        modifiers.add(UiModifierClipRounded(cornerRadiusDp))
-    }
-
-    fun background(colorHex: String) {
-        modifiers.add(UiModifierBackground(colorHex))
-    }
-
-    fun build() = UiBox(id = id, children = children, modifiers = modifiers)
-}
-
-class LazyRowBuilder(private val id: Uuid?) : UiContainerBuilder {
-    private val children = mutableListOf<UiComponent>()
-    private val modifiers = mutableListOf<UiModifier>()
-
-    override fun add(component: UiComponent) {
-        children.add(component)
-    }
-
-    fun build() = UiLazyRow(id = id, children = children, modifiers = modifiers)
-}
-
-class ModifierBuilder {
-    private val modifiers = mutableListOf<UiModifier>()
-
-    fun padding(start: Int = 0, top: Int = 0, end: Int = 0, bottom: Int = 0) {
-        modifiers.add(UiModifierPadding(start, top, end, bottom))
-    }
-
-    fun size(width: Int? = null, height: Int? = null) {
-        modifiers.add(UiModifierSize(width, height))
-    }
-
-    fun clickable(action: UiAction) {
-        modifiers.add(UiModifierClickable(action))
-    }
-
-    fun clip(cornerRadiusDp: Int) {
-        modifiers.add(UiModifierClipRounded(cornerRadiusDp))
-    }
-
-    fun build() = modifiers
 }
 
 fun buildUi(block: UiContainerBuilder.() -> Unit): List<UiComponent> {
