@@ -1,4 +1,4 @@
-package org.ensodai.avalonmediacard.contract.ui.components
+package org.ensodai.avalonmediacard.contract
 
 import kotlinx.serialization.Serializable
 import org.ensodai.avalonmediacard.contract.UiComponent

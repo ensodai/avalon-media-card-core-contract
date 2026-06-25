@@ -1,4 +1,9 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.model
+
+import org.ensodai.avalonmediacard.contract.MediaMetadata
+import org.ensodai.avalonmediacard.contract.PersonMetadata
+import org.ensodai.avalonmediacard.contract.TmdbMovieDto
+import org.ensodai.avalonmediacard.contract.TmdbMultiSearchDto
 
 /**
  * Интерфейс каталога медиаданных. Реализуется плагином источника (например, TMDB).

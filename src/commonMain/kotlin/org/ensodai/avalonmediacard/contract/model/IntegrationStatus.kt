@@ -6,5 +6,8 @@ import kotlinx.serialization.Serializable
 data class IntegrationStatus(
     val service: String,
     val connected: Boolean,
-    val username: String? = null
+    val username: String? = null,
+    val displayName: String,
+    val description: String,
+    val comingSoon: Boolean = false
 )

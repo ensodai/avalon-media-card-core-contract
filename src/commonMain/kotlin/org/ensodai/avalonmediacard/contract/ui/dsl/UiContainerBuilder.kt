@@ -1,32 +1,6 @@
 package org.ensodai.avalonmediacard.contract.ui.dsl
 
-import org.ensodai.avalonmediacard.contract.MediaStatus
-import org.ensodai.avalonmediacard.contract.UiAction
-import org.ensodai.avalonmediacard.contract.ui.components.UiButton
-import org.ensodai.avalonmediacard.contract.UiComponent
-import org.ensodai.avalonmediacard.contract.UiTextStyle
-import org.ensodai.avalonmediacard.contract.ui.components.CastMemberItem
-import org.ensodai.avalonmediacard.contract.ui.components.MediaRating
-import org.ensodai.avalonmediacard.contract.ui.components.MovieCarouselItem
-import org.ensodai.avalonmediacard.contract.ui.components.StatusOption
-import org.ensodai.avalonmediacard.contract.ui.components.TrailerItem
-import org.ensodai.avalonmediacard.contract.ui.components.UiImage
-import org.ensodai.avalonmediacard.contract.ui.components.UiImageGallery
-import org.ensodai.avalonmediacard.contract.ui.components.UiMediaCast
-import org.ensodai.avalonmediacard.contract.ui.components.UiMediaHeader
-import org.ensodai.avalonmediacard.contract.ui.components.UiMediaTrailers
-import org.ensodai.avalonmediacard.contract.ui.components.UiMovieCarousel
-import org.ensodai.avalonmediacard.contract.ui.components.UiMovieGrid
-import org.ensodai.avalonmediacard.contract.ui.components.UiPersonHeader
-import org.ensodai.avalonmediacard.contract.ui.components.UiRatingBar
-import org.ensodai.avalonmediacard.contract.ui.components.UiSpacer
-import org.ensodai.avalonmediacard.contract.ui.components.UiStateWidget
-import org.ensodai.avalonmediacard.contract.ui.components.UiStatusSelector
-import org.ensodai.avalonmediacard.contract.ui.components.UiText
-import org.ensodai.avalonmediacard.contract.ui.components.UiTextSection
-import org.ensodai.avalonmediacard.contract.ui.components.UiWidgetContainer
-import org.ensodai.avalonmediacard.contract.ui.components.WidgetState
-import org.ensodai.avalonmediacard.contract.ui.components.WidgetType
+import org.ensodai.avalonmediacard.contract.*
 import kotlin.uuid.Uuid
 
 @DslMarker

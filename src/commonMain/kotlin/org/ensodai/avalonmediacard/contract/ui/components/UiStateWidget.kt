@@ -1,8 +1,6 @@
 package org.ensodai.avalonmediacard.contract
 
 import kotlinx.serialization.Serializable
-import org.ensodai.avalonmediacard.contract.ui.components.WidgetState
-import org.ensodai.avalonmediacard.contract.ui.components.WidgetType
 import kotlin.uuid.Uuid
 
 @Serializable

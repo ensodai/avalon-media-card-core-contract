@@ -11,6 +11,9 @@ sealed interface WidgetTarget {
     data object HomeWidget : WidgetTarget
 
     @Serializable
+    data object Integrations : WidgetTarget
+
+    @Serializable
     data class SearchResults(val query: String) : WidgetTarget
 
     // --- Экран деталей медиа (фильм/сериал) ---

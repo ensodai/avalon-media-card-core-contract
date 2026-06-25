@@ -1,4 +1,4 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.plugins
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineScope
@@ -8,10 +8,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import io.ktor.client.HttpClient
-import org.ensodai.avalonmediacard.contract.plugins.ActionHandler
-import org.ensodai.avalonmediacard.contract.plugins.StreamProvider
-import org.ensodai.avalonmediacard.contract.plugins.UserMovieProvider
-import org.ensodai.avalonmediacard.contract.plugins.WidgetProvider
+import org.ensodai.avalonmediacard.contract.model.MediaCatalog
+import org.ensodai.avalonmediacard.contract.UiAction
+import org.ensodai.avalonmediacard.contract.UiActionCommand
 
 /**
  * Базовый интерфейс для любого плагина в системе Avalon.
@@ -91,36 +90,8 @@ class PluginContext(
     val userMovies: UserMovieProvider,
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 ) {
-    private val _widgetProviders = mutableListOf<WidgetProvider>()
-    val widgetProviders: List<WidgetProvider> get() = _widgetProviders
-
-    private val _streamProviders = mutableListOf<StreamProvider>()
-    val streamProviders: List<StreamProvider> get() = _streamProviders
-
-    private val _actionHandlers = mutableListOf<ActionHandler>()
-    val actionHandlers: List<ActionHandler> get() = _actionHandlers
-
-    private val _callHandlers = mutableListOf<PluginCallHandler>()
-    val callHandlers: List<PluginCallHandler> get() = _callHandlers
-
     suspend fun call(targetPluginId: String, command: String, payloadJson: String): String {
         return dispatcher.call(targetPluginId, command, payloadJson)
-    }
-
-    fun registerWidgetProvider(provider: WidgetProvider) {
-        _widgetProviders.add(provider)
-    }
-
-    fun registerStreamProvider(provider: StreamProvider) {
-        _streamProviders.add(provider)
-    }
-
-    fun registerActionHandler(handler: ActionHandler) {
-        _actionHandlers.add(handler)
-    }
-
-    fun registerCallHandler(handler: PluginCallHandler) {
-        _callHandlers.add(handler)
     }
 }
 
