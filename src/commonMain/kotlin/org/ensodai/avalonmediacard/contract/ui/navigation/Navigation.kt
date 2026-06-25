@@ -6,7 +6,7 @@ interface Navigation {
     fun navigateToDetails(key: MediaKey)
     fun navigateToPerson(key: MediaKey, personName: String)
     fun navigateToDynamic(screenId: String, title: String, params: Map<String, String> = emptyMap())
-    fun navigateToMediaList(mediaId: String, catalogId: String, listType: String, title: String)
+    fun navigateToMediaList(key: MediaKey, listType: String, title: String)
     fun navigateToIntegrations()
     fun navigateBack()
 }

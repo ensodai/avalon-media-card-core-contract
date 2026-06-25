@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.contract.plugins
 
 import kotlinx.serialization.Serializable
+import org.ensodai.avalonmediacard.contract.MediaKey
 
 /**
  * Целевые виджеты интеграции компонентов плагина в интерфейс ядра.
@@ -18,44 +19,44 @@ sealed interface WidgetTarget {
 
     // --- Экран деталей медиа (фильм/сериал) ---
     @Serializable
-    data class MediaHeader(val mediaId: String) : WidgetTarget
+    data class MediaHeader(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class MediaDescription(val mediaId: String) : WidgetTarget
+    data class MediaDescription(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class MediaTrailers(val mediaId: String) : WidgetTarget
+    data class MediaTrailers(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class MediaCast(val mediaId: String) : WidgetTarget
+    data class MediaCast(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class MediaRecommendations(val mediaId: String) : WidgetTarget
+    data class MediaRecommendations(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class MediaSimilar(val mediaId: String) : WidgetTarget
+    data class MediaSimilar(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class MediaUserActions(val mediaId: String) : WidgetTarget
+    data class MediaUserActions(val key: MediaKey) : WidgetTarget
 
     // --- Экран деталей персоны (актера/режиссера) ---
     @Serializable
-    data class PersonHeader(val personId: String) : WidgetTarget
+    data class PersonHeader(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class PersonImages(val personId: String) : WidgetTarget
+    data class PersonImages(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class PersonBio(val personId: String) : WidgetTarget
+    data class PersonBio(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class PersonActingCredits(val personId: String) : WidgetTarget
+    data class PersonActingCredits(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class PersonDirectingCredits(val personId: String) : WidgetTarget
+    data class PersonDirectingCredits(val key: MediaKey) : WidgetTarget
 
     @Serializable
-    data class MediaList(val movieId: String, val listType: String) : WidgetTarget
+    data class MediaList(val key: MediaKey, val listType: String) : WidgetTarget
 
     // Резервный кастом для непредвиденных интеграций сторонних плагинов
     @Serializable

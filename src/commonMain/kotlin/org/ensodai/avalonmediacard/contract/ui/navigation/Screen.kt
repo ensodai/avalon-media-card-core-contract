@@ -31,8 +31,7 @@ sealed interface Screen {
 
     @Serializable
     data class MediaList(
-        val mediaId: String,
-        val catalogId: String,
+        val key: MediaKey,
         val listType: String,
         val title: String
     ) : Screen

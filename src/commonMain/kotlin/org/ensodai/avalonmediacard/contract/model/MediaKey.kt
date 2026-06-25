@@ -3,6 +3,11 @@ package org.ensodai.avalonmediacard.contract
 import kotlinx.serialization.Serializable
 
 @Serializable
+enum class EntityType {
+    MOVIE, TV, PERSON, CUSTOM
+}
+
+@Serializable
 sealed interface MediaProvider {
     val id: String
 
@@ -28,5 +33,6 @@ sealed interface MediaProvider {
 @Serializable
 data class MediaKey(
     val provider: MediaProvider,
-    val mediaId: String
+    val type: EntityType,
+    val id: String
 )
