@@ -9,8 +9,7 @@ import kotlin.uuid.Uuid
 
 @Serializable
 data class MovieCarouselItem(
-    val mediaId: String,
-    val catalogId: String,
+    val key: MediaKey,
     val title: String,
     val posterUrl: String
 )

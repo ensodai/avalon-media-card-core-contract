@@ -7,11 +7,10 @@ import kotlin.uuid.Uuid
 
 @Serializable
 data class CastMemberItem(
-    val id: String,
+    val key: MediaKey,
     val name: String,
     val character: String? = null,
-    val profileUrl: String? = null,
-    val catalogId: String
+    val profileUrl: String? = null
 )
 
 @Serializable

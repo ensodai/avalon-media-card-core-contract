@@ -14,12 +14,11 @@ sealed interface Screen {
     data class PluginHome(val pluginId: String) : Screen
 
     @Serializable
-    data class Details(val mediaId: String, val catalogId: String) : Screen
+    data class Details(val key: MediaKey) : Screen
 
     @Serializable
     data class Person(
-        val personId: String,
-        val catalogId: String,
+        val key: MediaKey,
         val personName: String
     ) : Screen
 

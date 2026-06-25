@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import io.ktor.client.HttpClient
 import org.ensodai.avalonmediacard.contract.model.MediaCatalog
 import org.ensodai.avalonmediacard.contract.UiAction
@@ -27,6 +28,7 @@ interface AvalonPlugin {
     val actionHandler: ActionHandler? get() = null
     val callHandler: PluginCallHandler? get() = null
     val supportedCommands: List<PluginCommandInfo> get() = emptyList()
+    val supportedProviders: List<String> get() = emptyList()
 
     // Сериализаторы для команд плагина (для типизированной десериализации в ядре)
     val commandSerializers: List<KSerializer<*>> get() = emptyList()
@@ -103,6 +105,9 @@ fun <T : Any> T.toAction(pluginId: String, serializer: KSerializer<T>): UiAction
         payloadJson = json.encodeToString(serializer, this)
     )
 }
+
+inline fun <reified T : Any> T.toAction(pluginId: String = ""): UiActionCommand =
+    this.toAction(pluginId, serializer<T>())
 
 /**
  * Простейший интерфейс логгера для плагинов.
