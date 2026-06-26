@@ -15,5 +15,6 @@ data class UserMovieItem(
     val userRating: Int? = null,
     val progressSeconds: Long = 0,
     val durationSeconds: Long = 0,
+    val inCollection: Boolean = false,
     val lastWatchedAt: Instant
 )

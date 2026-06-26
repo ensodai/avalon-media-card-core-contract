@@ -51,6 +51,12 @@ data class UiActionSetStatus(
 ) : UiAction()
 
 @Serializable
+data class UiActionSetInCollection(
+    val mediaId: String,
+    val inCollection: Boolean
+) : UiAction()
+
+@Serializable
 data class UiActionShowDialog(
     val dialogId: String,
     val title: String,

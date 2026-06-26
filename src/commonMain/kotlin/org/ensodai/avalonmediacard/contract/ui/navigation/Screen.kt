@@ -11,6 +11,9 @@ sealed interface Screen {
     data object Integrations : Screen
 
     @Serializable
+    data object MyCollection : Screen
+
+    @Serializable
     data class PluginHome(val pluginId: String) : Screen
 
     @Serializable

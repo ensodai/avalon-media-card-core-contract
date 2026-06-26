@@ -4,12 +4,11 @@ import kotlinx.serialization.Serializable
 import kotlin.uuid.Uuid
 
 @Serializable
-data class SidebarItem(
-    val itemId: String,
+data class UiContinueWatching(
+    val mediaId: String,
     val title: String,
-    val iconName: String,
-    val screen: Screen? = null,
+    val subtitle: String,
+    val playAction: UiAction,
     override val id: Uuid? = null,
     override val modifiers: List<UiModifier> = emptyList()
 ) : UiComponent()
-

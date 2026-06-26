@@ -113,29 +113,33 @@ interface UiContainerBuilder {
         trailerUrl: String? = null,
         isLoading: Boolean = false,
         catalogId: String? = null,
+        inCollection: Boolean = false,
+        mediaId: String? = null,
         id: Uuid? = null,
         block: (ModifierBuilder.() -> Unit)? = null
     ) {
         val modifiers = block?.let { ModifierBuilder().apply(it).build() } ?: emptyList()
         add(
             UiMediaHeader(
-                title,
-                subtitle,
-                tagline,
-                rating,
-                ratings,
-                genres,
-                releaseDate,
-                posterUrl,
-                backgroundUrl,
-                directorName,
-                directorId,
-                directorImageUrl,
-                trailerUrl,
-                isLoading,
-                catalogId,
-                id,
-                modifiers
+                title = title,
+                subtitle = subtitle,
+                tagline = tagline,
+                rating = rating,
+                ratings = ratings,
+                genres = genres,
+                releaseDate = releaseDate,
+                posterUrl = posterUrl,
+                backgroundUrl = backgroundUrl,
+                directorName = directorName,
+                directorId = directorId,
+                directorImageUrl = directorImageUrl,
+                trailerUrl = trailerUrl,
+                isLoading = isLoading,
+                catalogId = catalogId,
+                inCollection = inCollection,
+                mediaId = mediaId,
+                id = id,
+                modifiers = modifiers
             )
         )
     }

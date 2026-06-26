@@ -29,6 +29,8 @@ data class UiMediaHeader(
     val trailerUrl: String? = null,
     val isLoading: Boolean = false,
     val catalogId: String? = null,
+    val inCollection: Boolean = false,
+    val mediaId: String? = null,
     override val id: Uuid? = null,
     override val modifiers: List<UiModifier> = emptyList()
 ) : UiComponent()

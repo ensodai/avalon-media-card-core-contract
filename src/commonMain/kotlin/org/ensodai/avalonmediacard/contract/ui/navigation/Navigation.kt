@@ -8,5 +8,6 @@ interface Navigation {
     fun navigateToDynamic(screenId: String, title: String, params: Map<String, String> = emptyMap())
     fun navigateToMediaList(key: MediaKey, listType: String, title: String)
     fun navigateToIntegrations()
+    fun navigateToMyCollection()
     fun navigateBack()
 }

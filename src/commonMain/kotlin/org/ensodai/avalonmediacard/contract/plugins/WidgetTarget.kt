@@ -12,6 +12,9 @@ sealed interface WidgetTarget {
     data object HomeWidget : WidgetTarget
 
     @Serializable
+    data object Sidebar : WidgetTarget
+
+    @Serializable
     data object Integrations : WidgetTarget
 
     @Serializable

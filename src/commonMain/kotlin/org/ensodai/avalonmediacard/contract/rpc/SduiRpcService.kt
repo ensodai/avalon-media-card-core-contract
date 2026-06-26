@@ -5,7 +5,7 @@ import kotlinx.rpc.annotations.Rpc
 
 @Rpc
 interface SduiRpcService {
-    suspend fun getSidebarItems(): List<SidebarItem>
+    fun streamSidebar(): Flow<List<UiComponent>>
     fun streamScreen(screen: Screen): Flow<List<UiComponent>>
     suspend fun getWidgetSettings(): List<WidgetSettingsData>
     suspend fun saveWidgetLayout(settings: List<WidgetSettingsData>): Boolean
