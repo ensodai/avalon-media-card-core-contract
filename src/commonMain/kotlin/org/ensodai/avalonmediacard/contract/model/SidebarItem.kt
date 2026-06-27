@@ -8,8 +8,6 @@ data class SidebarItem(
     val itemId: String,
     val title: String,
     val iconName: String,
-    val screen: Screen? = null,
-    override val id: Uuid? = null,
-    override val modifiers: List<UiModifier> = emptyList()
-) : UiComponent()
+    val screen: Screen? = null
+)
 
