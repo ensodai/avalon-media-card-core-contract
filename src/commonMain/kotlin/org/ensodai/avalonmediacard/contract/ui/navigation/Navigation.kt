@@ -9,5 +9,6 @@ interface Navigation {
     fun navigateToMediaList(key: MediaKey, listType: String, title: String)
     fun navigateToIntegrations()
     fun navigateToMyCollection()
+    fun navigateToCustomList(listId: kotlin.uuid.Uuid, title: String)
     fun navigateBack()
 }

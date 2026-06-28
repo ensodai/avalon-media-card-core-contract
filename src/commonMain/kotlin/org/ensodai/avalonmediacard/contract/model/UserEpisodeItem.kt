@@ -16,5 +16,6 @@ data class UserEpisodeItem(
     val durationSeconds: Long = 0,
     val isWatched: Boolean = false,
     val inCollection: Boolean = false,
+    val userRating: Int? = null,
     val lastWatchedAt: Instant
 )

@@ -1,18 +1,15 @@
 package org.ensodai.avalonmediacard.contract.plugins
 
-import kotlinx.coroutines.flow.Flow
+import io.ktor.client.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.Dispatchers
-import kotlinx.serialization.Serializable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
-import io.ktor.client.HttpClient
 import org.ensodai.avalonmediacard.contract.Screen
 import org.ensodai.avalonmediacard.contract.model.MediaCatalog
-import org.ensodai.avalonmediacard.contract.MediaKey
-import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.slot.Action
 import org.ensodai.avalonmediacard.contract.slot.ActionCommand
 import org.ensodai.avalonmediacard.contract.slot.SlotUpdate
@@ -41,14 +38,18 @@ interface AvalonPlugin {
  */
 class SlotRegistry {
     @PublishedApi
-    internal val handlers = mutableMapOf<KClass<out Screen>, (Screen) -> List<Flow<SlotUpdate>>>()
+    internal val handlers = mutableMapOf<KClass<out Screen>, (Screen, kotlin.uuid.Uuid?) -> List<Flow<SlotUpdate>>>()
 
     inline fun <reified T : Screen> onScreen(noinline handler: (T) -> List<Flow<SlotUpdate>>) {
-        handlers[T::class] = { screen -> handler(screen as T) }
+        handlers[T::class] = { screen, _ -> handler(screen as T) }
     }
 
-    fun getFlowsForScreen(screen: Screen): List<Flow<SlotUpdate>> {
-        return handlers[screen::class]?.invoke(screen) ?: emptyList()
+    inline fun <reified T : Screen> onScreenWithUser(noinline handler: (T, kotlin.uuid.Uuid?) -> List<Flow<SlotUpdate>>) {
+        handlers[T::class] = { screen, userId -> handler(screen as T, userId) }
+    }
+
+    fun getFlowsForScreen(screen: Screen, userId: kotlin.uuid.Uuid? = null): List<Flow<SlotUpdate>> {
+        return handlers[screen::class]?.invoke(screen, userId) ?: emptyList()
     }
 }
 
@@ -144,14 +145,36 @@ class PluginContext(
     val actionBus: ActionBus,
     val catalog: MediaCatalog,
     val userMovies: UserMovieProvider,
+    val userCustomLists: UserCustomListProvider,
+    val settings: PluginSettings,
     val slots: SlotRegistry = SlotRegistry(),
     val commands: CommandRegistry = CommandRegistry(),
     val streams: StreamRegistry = StreamRegistry(),
+    val sidebars: SidebarRegistry = SidebarRegistry(),
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 ) {
     suspend fun call(targetPluginId: String, command: String, payloadJson: String): String {
         return dispatcher.call(targetPluginId, command, payloadJson)
     }
+}
+
+interface PluginSettings {
+    suspend fun getString(key: String): String?
+    suspend fun setString(key: String, value: String)
+    suspend fun getBoolean(key: String, defaultValue: Boolean = false): Boolean
+    suspend fun setBoolean(key: String, value: Boolean)
+    fun observeString(key: String, defaultValue: String? = null): Flow<String?>
+    fun observeBoolean(key: String, defaultValue: Boolean = false): Flow<Boolean>
+}
+
+class SidebarRegistry {
+    private var provider: ((kotlin.uuid.Uuid?) -> Flow<List<org.ensodai.avalonmediacard.contract.SidebarItem>>)? = null
+
+    fun onSidebar(handler: (kotlin.uuid.Uuid?) -> Flow<List<org.ensodai.avalonmediacard.contract.SidebarItem>>) {
+        provider = handler
+    }
+
+    fun getFlow(userId: kotlin.uuid.Uuid?): Flow<List<org.ensodai.avalonmediacard.contract.SidebarItem>>? = provider?.invoke(userId)
 }
 
 fun <T : Any> T.toAction(pluginId: String, serializer: KSerializer<T>): ActionCommand {

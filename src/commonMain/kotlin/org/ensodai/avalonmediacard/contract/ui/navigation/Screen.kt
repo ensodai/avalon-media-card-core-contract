@@ -14,6 +14,12 @@ sealed interface Screen {
     data object MyCollection : Screen
 
     @Serializable
+    data class CustomList(
+        val listId: kotlin.uuid.Uuid,
+        val title: String
+    ) : Screen
+
+    @Serializable
     data class PluginHome(val pluginId: String) : Screen
 
     @Serializable

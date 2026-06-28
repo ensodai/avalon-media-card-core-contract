@@ -25,6 +25,17 @@ data class RelatedMediaMetadata(
 )
 
 @Serializable
+data class SeasonMetadata(
+    val id: String,
+    val seasonNumber: Int,
+    val name: String,
+    val overview: String? = null,
+    val posterUrl: String? = null,
+    val episodeCount: Int = 0,
+    val airDate: String? = null
+)
+
+@Serializable
 data class MediaMetadata(
     val title: String,
     val subtitle: String? = null,
@@ -41,5 +52,12 @@ data class MediaMetadata(
     val cast: List<ActorMetadata> = emptyList(),
     val trailers: List<TrailerMetadata> = emptyList(),
     val recommendations: List<RelatedMediaMetadata> = emptyList(),
-    val similar: List<RelatedMediaMetadata> = emptyList()
+    val similar: List<RelatedMediaMetadata> = emptyList(),
+    
+    // TV Show specific metadata
+    val numberOfSeasons: Int? = null,
+    val numberOfEpisodes: Int? = null,
+    val status: String? = null,
+    val network: String? = null,
+    val seasons: List<SeasonMetadata> = emptyList()
 )

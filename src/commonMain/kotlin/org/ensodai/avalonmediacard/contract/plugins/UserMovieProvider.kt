@@ -9,8 +9,10 @@ import kotlin.uuid.Uuid
  */
 interface UserMovieProvider {
     suspend fun getUserMovies(userId: Uuid): List<UserMovieItem>
+    fun observeUserMovies(userId: Uuid): kotlinx.coroutines.flow.Flow<List<UserMovieItem>>
     suspend fun updateUserMovie(item: UserMovieItem): Boolean
     suspend fun deleteUserMovie(userId: Uuid, mediaId: String): Boolean
     suspend fun getUserEpisodes(userId: Uuid, mediaId: String): List<UserEpisodeItem>
     suspend fun updateUserEpisode(item: UserEpisodeItem): Boolean
+    suspend fun notifyUpdate()
 }
