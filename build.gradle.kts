@@ -29,8 +29,11 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
                 api("org.jetbrains.kotlinx:kotlinx-rpc-krpc-client:0.10.2")
+                api("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:0.10.2")
+                api("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-cbor:0.10.2")
                 implementation("io.ktor:ktor-client-core:3.5.0")
             }
         }
