@@ -38,7 +38,8 @@ data class CastMemberItem(
 data class MovieCarouselItem(
     val key: MediaKey,
     val title: String,
-    val posterUrl: String? = null
+    val posterUrl: String? = null,
+    val badges: List<String> = emptyList()
 )
 
 @Serializable

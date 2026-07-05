@@ -38,6 +38,7 @@ data class SeasonMetadata(
 @Serializable
 data class MediaMetadata(
     val title: String,
+    val originalTitle: String? = null,
     val subtitle: String? = null,
     val description: String? = null,
     val posterUrl: String? = null,

@@ -14,6 +14,9 @@ sealed interface Screen {
     data object MyCollection : Screen
 
     @Serializable
+    data class Search(val initialQuery: String = "") : Screen
+
+    @Serializable
     data class CustomList(
         val listId: kotlin.uuid.Uuid,
         val title: String

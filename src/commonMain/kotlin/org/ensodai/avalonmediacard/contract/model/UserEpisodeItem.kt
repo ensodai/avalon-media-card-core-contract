@@ -17,5 +17,8 @@ data class UserEpisodeItem(
     val isWatched: Boolean = false,
     val inCollection: Boolean = false,
     val userRating: Int? = null,
-    val lastWatchedAt: Instant
+    val lastWatchedAt: Instant,
+    val lastSourceProviderId: String? = null,
+    val lastSourceId: String? = null,
+    val lastSourcePayload: String? = null
 )

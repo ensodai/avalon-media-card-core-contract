@@ -23,6 +23,8 @@ enum class SlotId {
     PersonBio,
     PersonCredits,
     MediaList,
-    CollectionGrid,
-    CustomListGrid
+    MediaGrid,
+    MediaSources,
+    TorrentInspector,
+    SearchResults
 }

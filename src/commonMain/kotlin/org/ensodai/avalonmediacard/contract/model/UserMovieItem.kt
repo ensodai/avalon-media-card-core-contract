@@ -16,5 +16,8 @@ data class UserMovieItem(
     val progressSeconds: Long = 0,
     val durationSeconds: Long = 0,
     val inCollection: Boolean = false,
-    val lastWatchedAt: Instant
+    val lastWatchedAt: Instant,
+    val lastSourceProviderId: String? = null,
+    val lastSourceId: String? = null,
+    val lastSourcePayload: String? = null
 )

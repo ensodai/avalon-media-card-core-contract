@@ -10,5 +10,7 @@ interface Navigation {
     fun navigateToIntegrations()
     fun navigateToMyCollection()
     fun navigateToCustomList(listId: kotlin.uuid.Uuid, title: String)
+    fun navigateToSearch(initialQuery: String)
+    fun navigateTo(screen: Screen)
     fun navigateBack()
 }

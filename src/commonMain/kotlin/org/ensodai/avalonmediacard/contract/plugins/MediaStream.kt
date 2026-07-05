@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.contract.plugins
 
 import kotlinx.serialization.Serializable
+import org.ensodai.avalonmediacard.contract.slot.Action
 
 /**
  * Тип видеопотока.
@@ -22,8 +23,20 @@ data class MediaStream(
     val url: String,
     val type: StreamType,
     val quality: String? = null,
+    val format: String? = null,
+    val videoCodec: String? = null,
+    val audioCodec: String? = null,
+    val isHdr: Boolean = false,
     val sizeBytes: Long? = null,
+    val durationSeconds: Double? = null,
     val sourceName: String,
     val seeders: Int? = null,     // Применимо для торрентов
-    val leechers: Int? = null     // Применимо для торрентов
+    val leechers: Int? = null,     // Применимо для торрентов
+    val clickAction: Action? = null,
+    // Поля для смапленных эпизодов
+    val isMapped: Boolean = false,
+    val episodeName: String? = null,
+    val seasonNumber: Int? = null,
+    val episodeNumber: Int? = null,
+    val episodePosterUrl: String? = null
 )

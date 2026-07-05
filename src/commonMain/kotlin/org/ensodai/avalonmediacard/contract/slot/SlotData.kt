@@ -2,6 +2,7 @@ package org.ensodai.avalonmediacard.contract.slot
 
 import kotlinx.serialization.Serializable
 import org.ensodai.avalonmediacard.contract.MediaKey
+import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 
 @Serializable
 sealed interface SlotData {
@@ -9,6 +10,7 @@ sealed interface SlotData {
     @Serializable 
     data class Header(
         val title: String,
+        val originalTitle: String? = null,
         val subtitle: String? = null,
         val tagline: String? = null,
         val rating: Double? = null,
@@ -66,8 +68,8 @@ sealed interface SlotData {
         val currentStatus: String,
         val currentRating: Int?,
         val maxRating: Int = 10,
-        val setStatusActionTemplate: ActionCommand? = null,
-        val setRatingActionTemplate: ActionCommand? = null
+        val statusOptions: Map<String, Action> = emptyMap(),
+        val ratingOptions: Map<Int, Action> = emptyMap()
     ) : SlotData
     
     @Serializable
@@ -89,12 +91,7 @@ sealed interface SlotData {
     data class TvSeasons(
         val seasons: List<SeasonItem>,
         val selectedSeasonNumber: Int,
-        val seasonContents: Map<Int, SeasonContent>,
-        val selectSeasonActionTemplate: ActionCommand? = null,
-        val markSeasonWatchedActionTemplate: ActionCommand? = null,
-        val toggleEpisodeWatchedActionTemplate: ActionCommand? = null,
-        val rateEpisodeActionTemplate: ActionCommand? = null,
-        val playEpisodeActionTemplate: ActionCommand? = null
+        val seasonContents: Map<Int, SeasonContent>
     ) : SlotData
 
     @Serializable
@@ -106,6 +103,20 @@ sealed interface SlotData {
         val saveActionLabel: String? = null,
         val isSaveEnabled: Boolean = true,
         val connectionStatus: ValidationStatus = ValidationStatus.None
+    ) : SlotData
+
+    @Serializable
+    data class MediaSources(
+        val sources: List<MediaStream>,
+        val isMappedSuccess: Boolean = false,
+        val mediaKey: MediaKey? = null
+    ) : SlotData
+
+    @Serializable
+    data class TorrentInspector(
+        val torrentHash: String,
+        val torrentTitle: String,
+        val files: List<TorrentFileItem>
     ) : SlotData
 }
 
@@ -160,7 +171,9 @@ data class SeasonItem(
     val name: String,
     val episodeCount: Int,
     val isFullyWatched: Boolean = false,
-    val isWatching: Boolean = false
+    val isWatching: Boolean = false,
+    val selectAction: Action? = null,
+    val markWatchedAction: Action? = null
 )
 
 @Serializable
@@ -180,5 +193,18 @@ data class EpisodeItem(
     val voteAverage: Double?,
     val runtime: Int?,
     val isWatched: Boolean = false,
-    val userRating: Int? = null
+    val userRating: Int? = null,
+    val playAction: Action? = null,
+    val toggleWatchedAction: Action? = null
+)
+
+@Serializable
+data class TorrentFileItem(
+    val path: String,
+    val size: Long,
+    val isVideo: Boolean,
+    val mappedSeasons: List<Int>?,
+    val mappedEpisodes: List<Int>?,
+    val fileIndex: Int? = null,
+    val remapAction: Action? = null
 )
