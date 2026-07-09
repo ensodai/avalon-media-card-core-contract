@@ -7,6 +7,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.modules.SerializersModule
 import org.ensodai.avalonmediacard.contract.Screen
+import org.ensodai.avalonmediacard.contract.SidebarItem
 import org.ensodai.avalonmediacard.contract.model.MediaCatalog
 import org.ensodai.avalonmediacard.contract.slot.ActionResult
 import org.ensodai.avalonmediacard.contract.slot.ServerAction
@@ -135,8 +136,10 @@ class PluginContext(
     val catalog: MediaCatalog,
     val userMovies: UserMovieProvider,
     val userCustomLists: UserCustomListProvider,
+    val userEpisodes: UserEpisodeProvider,
     val torrentMappings: TorrentMappingProvider,
     val settings: PluginSettings,
+    val userMediaBindings: UserMediaBindingProvider,
     val slots: SlotRegistry = SlotRegistry(),
     val actions: ActionRegistry = ActionRegistry(),
     val streams: StreamRegistry = StreamRegistry(),
@@ -154,13 +157,13 @@ interface PluginSettings {
 }
 
 class SidebarRegistry {
-    private var provider: ((Uuid?) -> Flow<List<org.ensodai.avalonmediacard.contract.SidebarItem>>)? = null
+    private var provider: ((Uuid?) -> Flow<List<SidebarItem>>)? = null
 
-    fun onSidebar(handler: (Uuid?) -> Flow<List<org.ensodai.avalonmediacard.contract.SidebarItem>>) {
+    fun onSidebar(handler: (Uuid?) -> Flow<List<SidebarItem>>) {
         provider = handler
     }
 
-    fun getFlow(userId: Uuid?): Flow<List<org.ensodai.avalonmediacard.contract.SidebarItem>>? = provider?.invoke(userId)
+    fun getFlow(userId: Uuid?): Flow<List<SidebarItem>>? = provider?.invoke(userId)
 }
 
 

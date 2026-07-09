@@ -108,7 +108,6 @@ sealed interface SlotData {
     @Serializable
     data class MediaSources(
         val sources: List<MediaStream>,
-        val isMappedSuccess: Boolean = false,
         val mediaKey: MediaKey? = null
     ) : SlotData
 

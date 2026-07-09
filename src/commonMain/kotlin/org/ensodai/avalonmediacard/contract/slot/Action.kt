@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.contract.slot
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 import org.ensodai.avalonmediacard.contract.MediaKey
 import org.ensodai.avalonmediacard.contract.Screen
@@ -21,6 +22,17 @@ data class ActionPlayVideo(
     val title: String, 
     val durationSeconds: Double? = null,
     val playlist: List<MediaStream> = emptyList()
+) : LocalAction
+
+@Serializable 
+data class ActionPreparePlayer(
+    val key: MediaKey,
+    val title: String
+) : LocalAction
+
+@Serializable 
+data class ActionPrepareSources(
+    val key: MediaKey
 ) : LocalAction
 
 @Serializable 
@@ -50,6 +62,7 @@ interface UserAwareCommand {
 }
 
 @Serializable
+@SerialName("PlayEpisodeCommand")
 data class PlayEpisodeCommand(
     val key: MediaKey,
     val seasonNumber: Int = 0,
@@ -64,6 +77,31 @@ data class PlayEpisodeCommand(
     }
 }
 
+@Serializable
+data class SaveEpisodeProgressCommand(
+    val mediaId: String,
+    val season: Int,
+    val episode: Int,
+    val progressSeconds: Long,
+    val durationSeconds: Long,
+    val isWatched: Boolean
+) : ServerAction
+
+@Serializable
+data class ToggleEpisodeWatchedCommand(
+    val key: MediaKey,
+    val seasonNumber: Int,
+    val episodeNumber: Int,
+    val isWatched: Boolean
+) : ServerAction
+
+@Serializable
+data class RateEpisodeCommand(
+    val key: MediaKey,
+    val seasonNumber: Int,
+    val episodeNumber: Int,
+    val rating: Int
+) : ServerAction
 @Serializable
 data class FetchMediaSourcesCommand(
     val key: MediaKey,
