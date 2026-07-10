@@ -67,18 +67,18 @@ class ServiceRegistry {
  */
 class SlotRegistry {
     @PublishedApi
-    internal val handlers = mutableMapOf<KClass<out Screen>, (Screen, Uuid?) -> List<Flow<SlotUpdate>>>()
+    internal val handlers = mutableMapOf<KClass<out Screen>, (Screen, Uuid?) -> Map<org.ensodai.avalonmediacard.contract.slot.SlotId, Flow<SlotUpdate>>>()
 
-    inline fun <reified T : Screen> onScreen(noinline handler: (T) -> List<Flow<SlotUpdate>>) {
+    inline fun <reified T : Screen> onScreen(noinline handler: (T) -> Map<org.ensodai.avalonmediacard.contract.slot.SlotId, Flow<SlotUpdate>>) {
         handlers[T::class] = { screen, _ -> handler(screen as T) }
     }
 
-    inline fun <reified T : Screen> onScreenWithUser(noinline handler: (T, Uuid?) -> List<Flow<SlotUpdate>>) {
+    inline fun <reified T : Screen> onScreenWithUser(noinline handler: (T, Uuid?) -> Map<org.ensodai.avalonmediacard.contract.slot.SlotId, Flow<SlotUpdate>>) {
         handlers[T::class] = { screen, userId -> handler(screen as T, userId) }
     }
 
-    fun getFlowsForScreen(screen: Screen, userId: Uuid? = null): List<Flow<SlotUpdate>> {
-        return handlers[screen::class]?.invoke(screen, userId) ?: emptyList()
+    fun getFlowsForScreen(screen: Screen, userId: Uuid? = null): Map<org.ensodai.avalonmediacard.contract.slot.SlotId, Flow<SlotUpdate>> {
+        return handlers[screen::class]?.invoke(screen, userId) ?: emptyMap()
     }
 }
 
