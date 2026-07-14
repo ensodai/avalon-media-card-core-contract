@@ -21,6 +21,7 @@ data class ActionPlayVideo(
     val url: String, 
     val title: String, 
     val durationSeconds: Double? = null,
+    val startPositionSeconds: Long? = null,
     val playlist: List<MediaStream> = emptyList()
 ) : LocalAction
 
