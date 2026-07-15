@@ -144,6 +144,9 @@ class PluginContext(
     val actions: ActionRegistry = ActionRegistry(),
     val streams: StreamRegistry = StreamRegistry(),
     val sidebars: SidebarRegistry = SidebarRegistry(),
+    val recommendations: RecommendationEngineRegistrar,
+    val telemetry: TelemetryProvider,
+    val affinityStore: AffinityVectorStore,
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 )
 
@@ -166,4 +169,11 @@ class SidebarRegistry {
     fun getFlow(userId: Uuid?): Flow<List<SidebarItem>>? = provider?.invoke(userId)
 }
 
-
+interface AffinityVectorStore {
+    val vectorUpdates: kotlinx.coroutines.flow.Flow<kotlin.uuid.Uuid>
+    suspend fun getVector(userId: Uuid): org.ensodai.avalonmediacard.contract.model.AffinityVector?
+    suspend fun saveVector(userId: Uuid, vector: org.ensodai.avalonmediacard.contract.model.AffinityVector, eventCount: Int)
+    suspend fun getPendingUsers(limit: Int): List<Uuid>
+    suspend fun getUserEventCount(userId: Uuid): Int
+    suspend fun getCachedEventCount(userId: Uuid): Int?
+}

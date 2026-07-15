@@ -36,6 +36,19 @@ data class SeasonMetadata(
 )
 
 @Serializable
+data class KeywordMetadata(
+    val id: Int,
+    val name: String,
+    val documentFrequency: Int = 0
+)
+
+@Serializable
+data class GenreMetadata(
+    val id: Int,
+    val name: String
+)
+
+@Serializable
 data class MediaMetadata(
     val title: String,
     val originalTitle: String? = null,
@@ -44,7 +57,8 @@ data class MediaMetadata(
     val posterUrl: String? = null,
     val backgroundUrl: String? = null,
     val rating: String? = null,
-    val genres: List<String> = emptyList(),
+    val genres: List<GenreMetadata> = emptyList(),
+    val keywords: List<KeywordMetadata> = emptyList(),
     val releaseDate: String? = null,
     val tagline: String? = null,
     val director: String? = null,

@@ -3,6 +3,14 @@ package org.ensodai.avalonmediacard.contract.slot
 import kotlinx.serialization.Serializable
 import org.ensodai.avalonmediacard.contract.MediaKey
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
+import org.ensodai.avalonmediacard.contract.model.ClickstreamContext
+
+@Serializable
+data class GenreItem(
+    val id: String,
+    val name: String,
+    val clickAction: Action? = null
+)
 
 @Serializable
 sealed interface SlotData {
@@ -15,7 +23,7 @@ sealed interface SlotData {
         val tagline: String? = null,
         val rating: Double? = null,
         val ratings: List<MediaRatingItem> = emptyList(),
-        val genres: List<String> = emptyList(),
+        val genres: List<GenreItem> = emptyList(),
         val releaseDate: String? = null,
         val posterUrl: String? = null,
         val backgroundUrl: String? = null,
@@ -42,7 +50,8 @@ sealed interface SlotData {
         val title: String, 
         val items: List<MovieCarouselItem>,
         val loadMoreAction: Action? = null,
-        val titleAction: Action? = null
+        val titleAction: Action? = null,
+        val telemetryContext: ClickstreamContext? = null
     ) : SlotData
 
     @Serializable 
@@ -84,7 +93,8 @@ sealed interface SlotData {
         val id: String,
         val title: String? = null,
         val items: List<MovieCarouselItem>,
-        val loadMoreAction: Action? = null
+        val loadMoreAction: Action? = null,
+        val telemetryContext: ClickstreamContext? = null
     ) : SlotData
 
     @Serializable

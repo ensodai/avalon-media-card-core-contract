@@ -18,4 +18,5 @@ interface MediaCatalog {
     suspend fun getMediaDetails(key: MediaKey, requireSeasons: Boolean = true): MediaMetadata
     suspend fun getPersonDetails(key: MediaKey): PersonMetadata
     suspend fun getSeasonDetails(key: MediaKey, seasonNumber: Int): List<org.ensodai.avalonmediacard.contract.slot.EpisodeItem>
+    suspend fun discoverMedia(genres: List<Int>, keywords: List<Int>, page: Int = 1, isTv: Boolean = false): List<TmdbMovieDto>
 }
