@@ -11,5 +11,9 @@ data class AffinityVector(
     val companyWeights: Map<String, Double> = emptyMap(),
     val pacingWeights: Map<String, Double> = emptyMap(),
     val eraWeights: Map<String, Double> = emptyMap(),
-    val moodWeights: Map<String, Double> = emptyMap()
+    val moodWeights: Map<String, Double> = emptyMap(),
+    
+    // --- Кратковременная память (Сессионный контекст) ---
+    val recentWatchedIds: List<String> = emptyList(), // Хронология недавних просмотров
+    val sessionBingeVector: Map<String, Double> = emptyMap() // "Запойный" вектор текущей сессии
 )

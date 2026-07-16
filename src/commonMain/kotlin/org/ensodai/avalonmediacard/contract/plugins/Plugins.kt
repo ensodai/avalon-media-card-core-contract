@@ -147,6 +147,7 @@ class PluginContext(
     val recommendations: RecommendationEngineRegistrar,
     val telemetry: TelemetryProvider,
     val affinityStore: AffinityVectorStore,
+    val genreDictionary: GenreDictionaryProvider,
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 )
 
@@ -176,4 +177,8 @@ interface AffinityVectorStore {
     suspend fun getPendingUsers(limit: Int): List<Uuid>
     suspend fun getUserEventCount(userId: Uuid): Int
     suspend fun getCachedEventCount(userId: Uuid): Int?
+}
+
+interface GenreDictionaryProvider {
+    suspend fun getLocalizedGenres(language: String = "ru"): Map<String, String>
 }

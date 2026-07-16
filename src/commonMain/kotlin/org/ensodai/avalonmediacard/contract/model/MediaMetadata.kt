@@ -11,6 +11,13 @@ data class ActorMetadata(
 )
 
 @Serializable
+data class ProductionCompanyMetadata(
+    val id: Int,
+    val name: String,
+    val logoUrl: String? = null
+)
+
+@Serializable
 data class TrailerMetadata(
     val name: String,
     val videoUrl: String,
@@ -57,8 +64,10 @@ data class MediaMetadata(
     val posterUrl: String? = null,
     val backgroundUrl: String? = null,
     val rating: String? = null,
+    val runtime: Int? = null,
     val genres: List<GenreMetadata> = emptyList(),
     val keywords: List<KeywordMetadata> = emptyList(),
+    val productionCompanies: List<ProductionCompanyMetadata> = emptyList(),
     val releaseDate: String? = null,
     val tagline: String? = null,
     val director: String? = null,

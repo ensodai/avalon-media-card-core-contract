@@ -26,5 +26,8 @@ enum class SlotId {
     MediaGrid,
     MediaSources,
     TorrentInspector,
-    SearchResults
+    SearchResults,
+    HeroBanner,
+    CarouselBackdrops,
+    Exploration
 }

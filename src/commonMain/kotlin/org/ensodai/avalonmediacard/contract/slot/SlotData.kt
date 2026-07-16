@@ -54,6 +54,34 @@ sealed interface SlotData {
         val telemetryContext: ClickstreamContext? = null
     ) : SlotData
 
+    @Serializable
+    data class Hero(
+        val id: String,
+        val title: String,
+        val subtitle: String? = null,
+        val items: List<MovieCarouselItem>,
+        val telemetryContext: ClickstreamContext? = null
+    ) : SlotData
+
+    @Serializable
+    data class CarouselBackdrops(
+        val id: String,
+        val title: String,
+        val items: List<MovieCarouselItem>,
+        val loadMoreAction: Action? = null,
+        val titleAction: Action? = null,
+        val telemetryContext: ClickstreamContext? = null
+    ) : SlotData
+
+    @Serializable
+    data class Exploration(
+        val id: String,
+        val title: String,
+        val items: List<MovieCarouselItem>,
+        val loadMoreAction: Action? = null,
+        val telemetryContext: ClickstreamContext? = null
+    ) : SlotData
+
     @Serializable 
     data class Comments(
         val title: String, 
