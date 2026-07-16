@@ -19,16 +19,16 @@ sealed interface SlotState {
 
 @Serializable
 data class SlotUpdate(
-    val slot: SlotId,
-    val pluginId: String,
+    val slotId: SlotId,
+    val nodeId: String,
     val state: SlotState
 )
 
 @Serializable
 sealed interface ScreenStreamEvent {
     @Serializable
-    data class Manifest(val slots: List<SlotId>) : ScreenStreamEvent
-    
+    data class Layout(val nodes: List<LayoutNode>) : ScreenStreamEvent
+
     @Serializable
     data class Update(val update: SlotUpdate) : ScreenStreamEvent
 }

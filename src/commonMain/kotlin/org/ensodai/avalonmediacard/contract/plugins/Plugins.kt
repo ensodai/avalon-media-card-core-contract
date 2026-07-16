@@ -66,21 +66,33 @@ class ServiceRegistry {
  * Плагин использует его для декларативного описания того, на каких экранах он работает.
  */
 class SlotRegistry {
-    @PublishedApi
-    internal val handlers = mutableMapOf<KClass<out Screen>, (Screen, Uuid?) -> Map<org.ensodai.avalonmediacard.contract.slot.SlotId, Flow<SlotUpdate>>>()
+    val declarations: Map<KClass<out Screen>, List<org.ensodai.avalonmediacard.contract.slot.SlotId>>
+        get() = _declarations
 
-    inline fun <reified T : Screen> onScreen(noinline handler: (T) -> Map<org.ensodai.avalonmediacard.contract.slot.SlotId, Flow<SlotUpdate>>) {
-        handlers[T::class] = { screen, _ -> handler(screen as T) }
+    @PublishedApi
+    internal val _declarations = mutableMapOf<KClass<out Screen>, List<org.ensodai.avalonmediacard.contract.slot.SlotId>>()
+
+    @PublishedApi
+    internal val handlers = mutableMapOf<KClass<out Screen>, suspend (Screen, Uuid?) -> ScreenSlots>()
+
+    inline fun <reified T : Screen> declare(vararg slotIds: org.ensodai.avalonmediacard.contract.slot.SlotId) {
+        val existing = _declarations[T::class] ?: emptyList()
+        _declarations[T::class] = (existing + slotIds).distinct()
     }
 
-    inline fun <reified T : Screen> onScreenWithUser(noinline handler: (T, Uuid?) -> Map<org.ensodai.avalonmediacard.contract.slot.SlotId, Flow<SlotUpdate>>) {
+    inline fun <reified T : Screen> onScreen(noinline handler: suspend (T, Uuid?) -> ScreenSlots) {
         handlers[T::class] = { screen, userId -> handler(screen as T, userId) }
     }
 
-    fun getFlowsForScreen(screen: Screen, userId: Uuid? = null): Map<org.ensodai.avalonmediacard.contract.slot.SlotId, Flow<SlotUpdate>> {
-        return handlers[screen::class]?.invoke(screen, userId) ?: emptyMap()
+    suspend fun getScreenSlots(screen: Screen, userId: Uuid? = null): ScreenSlots? {
+        return handlers[screen::class]?.invoke(screen, userId)
     }
 }
+
+data class ScreenSlots(
+    val layout: List<org.ensodai.avalonmediacard.contract.slot.LayoutNode> = emptyList(),
+    val flow: Flow<SlotUpdate>
+)
 
 /**
  * Реестр команд плагина.

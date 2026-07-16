@@ -26,7 +26,10 @@ sealed interface Screen {
     data class PluginHome(val pluginId: String) : Screen
 
     @Serializable
-    data class Details(val key: MediaKey) : Screen
+    data class MovieDetails(val key: MediaKey) : Screen
+
+    @Serializable
+    data class TvShowDetails(val key: MediaKey) : Screen
 
     @Serializable
     data class Person(
@@ -47,4 +50,14 @@ sealed interface Screen {
         val listType: String,
         val title: String
     ) : Screen
+
+    companion object {
+        fun Details(key: MediaKey): Screen {
+            return if (key.type == EntityType.TV) {
+                TvShowDetails(key)
+            } else {
+                MovieDetails(key)
+            }
+        }
+    }
 }
