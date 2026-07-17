@@ -12,6 +12,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaCatalog
 import org.ensodai.avalonmediacard.contract.slot.ActionResult
 import org.ensodai.avalonmediacard.contract.slot.ServerAction
 import org.ensodai.avalonmediacard.contract.slot.SlotUpdate
+import org.ensodai.avalonmediacard.contract.slot.ScreenStreamEvent
 
 import kotlin.reflect.KClass
 import kotlin.uuid.Uuid
@@ -91,7 +92,7 @@ class SlotRegistry {
 
 data class ScreenSlots(
     val layout: List<org.ensodai.avalonmediacard.contract.slot.LayoutNode> = emptyList(),
-    val flow: Flow<SlotUpdate>
+    val flow: Flow<ScreenStreamEvent>
 )
 
 /**

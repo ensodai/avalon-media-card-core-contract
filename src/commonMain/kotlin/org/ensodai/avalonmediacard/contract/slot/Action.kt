@@ -22,7 +22,8 @@ data class ActionPlayVideo(
     val title: String, 
     val durationSeconds: Double? = null,
     val startPositionSeconds: Long? = null,
-    val playlist: List<MediaStream> = emptyList()
+    val playlist: List<MediaStream> = emptyList(),
+    val mediaKey: MediaKey? = null
 ) : LocalAction
 
 @Serializable 
