@@ -8,6 +8,15 @@ sealed interface Screen {
     data object Dashboard : Screen
 
     @Serializable
+    data object Movies : Screen
+
+    @Serializable
+    data object TvShows : Screen
+
+    @Serializable
+    data object Trends : Screen
+
+    @Serializable
     data object Integrations : Screen
 
     @Serializable
