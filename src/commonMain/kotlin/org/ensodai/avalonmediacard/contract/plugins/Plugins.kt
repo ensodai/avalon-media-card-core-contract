@@ -113,19 +113,19 @@ class ActionRegistry {
  */
 class StreamRegistry {
     private var provider: ((String, Int?, Int?) -> Flow<MediaStream>)? = null
-    private var preparer: (suspend (MediaStream) -> String)? = null
+    private var preparer: (suspend (MediaStream) -> MediaStream)? = null
     
     fun onMedia(handler: (String, Int?, Int?) -> Flow<MediaStream>) {
         provider = handler
     }
 
-    fun onPrepare(handler: suspend (MediaStream) -> String) {
+    fun onPrepare(handler: suspend (MediaStream) -> MediaStream) {
         preparer = handler
     }
     
     fun getStreams(mediaId: String, season: Int?, episode: Int?): Flow<MediaStream>? = provider?.invoke(mediaId, season, episode)
 
-    suspend fun prepareStream(stream: MediaStream): String? = preparer?.invoke(stream)
+    suspend fun prepareStream(stream: MediaStream): MediaStream? = preparer?.invoke(stream)
 }
 
 

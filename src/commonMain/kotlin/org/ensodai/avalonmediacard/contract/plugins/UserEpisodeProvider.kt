@@ -10,7 +10,8 @@ data class UserEpisodeProgress(
     val progressSeconds: Long,
     val durationSeconds: Long,
     val isWatched: Boolean,
-    val userRating: Int? = null
+    val userRating: Int? = null,
+    val lastWatchedAtEpochMs: Long? = null
 )
 
 interface UserEpisodeProvider {

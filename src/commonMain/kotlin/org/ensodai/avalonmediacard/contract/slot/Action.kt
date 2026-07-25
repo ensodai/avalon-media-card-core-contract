@@ -23,7 +23,9 @@ data class ActionPlayVideo(
     val durationSeconds: Double? = null,
     val startPositionSeconds: Long? = null,
     val playlist: List<MediaStream> = emptyList(),
-    val mediaKey: MediaKey? = null
+    val mediaKey: MediaKey? = null,
+    val audioTracks: List<org.ensodai.avalonmediacard.contract.plugins.AudioTrack> = emptyList(),
+    val subtitleTracks: List<org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack> = emptyList()
 ) : LocalAction
 
 @Serializable 

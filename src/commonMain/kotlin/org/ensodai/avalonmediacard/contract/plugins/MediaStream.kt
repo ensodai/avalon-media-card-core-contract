@@ -42,5 +42,9 @@ data class MediaStream(
     // Поля для прогресса просмотра
     val watchedProgressSeconds: Long? = null,
     val isWatched: Boolean = false,
-    val userRating: Int? = null
+    val userRating: Int? = null,
+    val lastWatchedAtEpochMs: Long? = null,
+    // Звуковые дорожки и субтитры конкретного эпизода/файла
+    val audioTracks: List<AudioTrack> = emptyList(),
+    val subtitleTracks: List<SubtitleTrack> = emptyList()
 )
