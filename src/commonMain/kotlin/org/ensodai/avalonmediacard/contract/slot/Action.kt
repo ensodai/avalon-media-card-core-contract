@@ -92,6 +92,14 @@ data class SaveEpisodeProgressCommand(
 ) : ServerAction
 
 @Serializable
+data class SaveMovieProgressCommand(
+    val mediaId: String,
+    val progressSeconds: Long,
+    val durationSeconds: Long,
+    val isWatched: Boolean
+) : ServerAction
+
+@Serializable
 data class ToggleEpisodeWatchedCommand(
     val key: MediaKey,
     val seasonNumber: Int,
