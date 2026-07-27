@@ -76,9 +76,25 @@ class SlotRegistry {
     @PublishedApi
     internal val handlers = mutableMapOf<KClass<out Screen>, suspend (Screen, Uuid?) -> ScreenSlots>()
 
+    @PublishedApi
+    internal val manifestLayoutBuilders = mutableMapOf<KClass<out Screen>, suspend (Uuid?) -> List<org.ensodai.avalonmediacard.contract.slot.LayoutNode>>()
+
     inline fun <reified T : Screen> declare(vararg slotIds: org.ensodai.avalonmediacard.contract.slot.SlotId) {
         val existing = _declarations[T::class] ?: emptyList()
         _declarations[T::class] = (existing + slotIds).distinct()
+    }
+
+    inline fun <reified T : Screen> declare(
+        slots: List<org.ensodai.avalonmediacard.contract.slot.SlotId>,
+        noinline manifestLayout: suspend (Uuid?) -> List<org.ensodai.avalonmediacard.contract.slot.LayoutNode>
+    ) {
+        val existing = _declarations[T::class] ?: emptyList()
+        _declarations[T::class] = (existing + slots).distinct()
+        manifestLayoutBuilders[T::class] = manifestLayout
+    }
+
+    fun getManifestLayoutBuilder(screenClass: KClass<out Screen>): (suspend (Uuid?) -> List<org.ensodai.avalonmediacard.contract.slot.LayoutNode>)? {
+        return manifestLayoutBuilders[screenClass]
     }
 
     inline fun <reified T : Screen> onScreen(noinline handler: suspend (T, Uuid?) -> ScreenSlots) {

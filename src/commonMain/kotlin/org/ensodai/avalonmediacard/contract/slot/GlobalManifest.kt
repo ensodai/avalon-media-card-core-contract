@@ -11,7 +11,8 @@ data class LayoutNode(
 
 @Serializable
 data class ScreenManifest(
-    val slots: List<SlotId>
+    val slots: List<SlotId>,
+    val layout: List<LayoutNode> = emptyList()
 )
 
 @Serializable
