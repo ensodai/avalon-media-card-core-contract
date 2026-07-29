@@ -1,4 +1,7 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.ui.navigation
+
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+import kotlin.uuid.Uuid
 
 interface Navigation {
     fun navigateToDashboard()
@@ -9,7 +12,7 @@ interface Navigation {
     fun navigateToMediaList(key: MediaKey, listType: String, title: String)
     fun navigateToIntegrations()
     fun navigateToMyCollection()
-    fun navigateToCustomList(listId: kotlin.uuid.Uuid, title: String)
+    fun navigateToCustomList(listId: Uuid, title: String)
     fun navigateToSearch(initialQuery: String)
     fun navigateTo(screen: Screen)
     fun navigateBack()

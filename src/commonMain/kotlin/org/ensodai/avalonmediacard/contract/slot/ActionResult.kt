@@ -1,7 +1,7 @@
 package org.ensodai.avalonmediacard.contract.slot
 
 import kotlinx.serialization.Serializable
-import org.ensodai.avalonmediacard.contract.Screen
+import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 
 @Serializable
 sealed interface ActionResult {
@@ -16,7 +16,7 @@ sealed interface ActionResult {
     
     // Отобразить всплывающее уведомление
     @Serializable
-    data class ShowNotification(val message: String, val type: String = "info") : ActionResult
+    data class ShowNotification(val message: String, @kotlinx.serialization.SerialName("notification_type") val notificationType: String = "info") : ActionResult
     
     // Бизнес-ошибка, которую клиент должен обработать
     @Serializable

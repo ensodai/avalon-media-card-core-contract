@@ -1,6 +1,7 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.model
 
 import kotlinx.serialization.Serializable
+import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 
 @Serializable
 enum class SidebarItemType {

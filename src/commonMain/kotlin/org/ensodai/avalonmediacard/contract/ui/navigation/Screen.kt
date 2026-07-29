@@ -1,6 +1,9 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.ui.navigation
 
 import kotlinx.serialization.Serializable
+import org.ensodai.avalonmediacard.contract.model.EntityType
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+import kotlin.uuid.Uuid
 
 @Serializable
 sealed interface Screen {
@@ -27,7 +30,7 @@ sealed interface Screen {
 
     @Serializable
     data class CustomList(
-        val listId: kotlin.uuid.Uuid,
+        val listId: Uuid,
         val title: String
     ) : Screen
 

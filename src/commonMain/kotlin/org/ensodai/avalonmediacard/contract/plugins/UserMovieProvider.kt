@@ -1,7 +1,7 @@
 package org.ensodai.avalonmediacard.contract.plugins
 
-import org.ensodai.avalonmediacard.contract.UserEpisodeItem
-import org.ensodai.avalonmediacard.contract.UserMovieItem
+import org.ensodai.avalonmediacard.contract.model.UserEpisodeItem
+import org.ensodai.avalonmediacard.contract.model.UserMovieItem
 import kotlin.uuid.Uuid
 
 /**

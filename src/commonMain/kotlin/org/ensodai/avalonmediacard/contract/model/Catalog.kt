@@ -1,7 +1,5 @@
 package org.ensodai.avalonmediacard.contract.model
 
-import org.ensodai.avalonmediacard.contract.*
-
 /**
  * Интерфейс каталога медиаданных. Реализуется плагином источника (например, TMDB).
  */

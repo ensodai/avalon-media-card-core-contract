@@ -1,6 +1,7 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.sync
 
 import kotlinx.serialization.Serializable
+import org.ensodai.avalonmediacard.contract.model.MediaType
 import kotlin.time.Instant
 import kotlin.uuid.Uuid
 

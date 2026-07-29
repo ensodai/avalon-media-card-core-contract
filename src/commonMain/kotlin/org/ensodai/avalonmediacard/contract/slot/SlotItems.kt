@@ -1,7 +1,7 @@
 package org.ensodai.avalonmediacard.contract.slot
 
 import kotlinx.serialization.Serializable
-import org.ensodai.avalonmediacard.contract.MediaKey
+import org.ensodai.avalonmediacard.contract.model.MediaKey
 
 @Serializable
 data class MediaRatingItem(

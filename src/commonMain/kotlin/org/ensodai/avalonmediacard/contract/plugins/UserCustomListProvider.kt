@@ -1,6 +1,6 @@
 package org.ensodai.avalonmediacard.contract.plugins
 
-import org.ensodai.avalonmediacard.contract.MediaKey
+import org.ensodai.avalonmediacard.contract.model.MediaKey
 import kotlin.uuid.Uuid
 
 data class CustomListStatus(

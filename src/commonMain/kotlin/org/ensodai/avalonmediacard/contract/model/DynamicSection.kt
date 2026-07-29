@@ -1,8 +1,6 @@
 package org.ensodai.avalonmediacard.contract.model
 
 import kotlinx.serialization.Serializable
-import org.ensodai.avalonmediacard.contract.EntityType
-import org.ensodai.avalonmediacard.contract.MediaKey
 
 @Serializable
 enum class SectionType {

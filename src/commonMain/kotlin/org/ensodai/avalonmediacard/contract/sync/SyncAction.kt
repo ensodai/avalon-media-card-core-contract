@@ -1,4 +1,4 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.sync
 
 import kotlinx.serialization.Serializable
 

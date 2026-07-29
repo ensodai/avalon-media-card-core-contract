@@ -3,9 +3,11 @@ package org.ensodai.avalonmediacard.contract.slot
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
-import org.ensodai.avalonmediacard.contract.MediaKey
-import org.ensodai.avalonmediacard.contract.Screen
+import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
+import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
+import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
 import kotlin.uuid.Uuid
 
 interface Action
@@ -18,14 +20,15 @@ data class ActionNavigate(val screen: Screen) : LocalAction
 
 @Serializable 
 data class ActionPlayVideo(
-    val url: String, 
-    val title: String, 
+    val url: String,
+    val title: String,
     val durationSeconds: Double? = null,
     val startPositionSeconds: Long? = null,
     val playlist: List<MediaStream> = emptyList(),
     val mediaKey: MediaKey? = null,
-    val audioTracks: List<org.ensodai.avalonmediacard.contract.plugins.AudioTrack> = emptyList(),
-    val subtitleTracks: List<org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack> = emptyList()
+    val audioTracks: List<AudioTrack> = emptyList(),
+    val subtitleTracks: List<SubtitleTrack> = emptyList(),
+    val audioTrackIndex: Int? = null
 ) : LocalAction
 
 @Serializable 
@@ -142,6 +145,7 @@ data class UpdateIntegrationSettingCommand(
         }
     }
 }
+
 
 @Serializable
 data class RefreshIntegrationsCommand(val service: String) : ServerAction

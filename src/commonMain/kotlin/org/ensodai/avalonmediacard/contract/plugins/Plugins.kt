@@ -6,13 +6,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.modules.SerializersModule
-import org.ensodai.avalonmediacard.contract.Screen
-import org.ensodai.avalonmediacard.contract.SidebarItem
+import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
+import org.ensodai.avalonmediacard.contract.model.SidebarItem
+import org.ensodai.avalonmediacard.contract.model.AffinityVector
 import org.ensodai.avalonmediacard.contract.model.MediaCatalog
 import org.ensodai.avalonmediacard.contract.slot.ActionResult
+import org.ensodai.avalonmediacard.contract.slot.LayoutNode
 import org.ensodai.avalonmediacard.contract.slot.ServerAction
-import org.ensodai.avalonmediacard.contract.slot.SlotUpdate
 import org.ensodai.avalonmediacard.contract.slot.ScreenStreamEvent
+import org.ensodai.avalonmediacard.contract.slot.SlotId
 
 import kotlin.reflect.KClass
 import kotlin.uuid.Uuid
@@ -67,33 +69,33 @@ class ServiceRegistry {
  * Плагин использует его для декларативного описания того, на каких экранах он работает.
  */
 class SlotRegistry {
-    val declarations: Map<KClass<out Screen>, List<org.ensodai.avalonmediacard.contract.slot.SlotId>>
+    val declarations: Map<KClass<out Screen>, List<SlotId>>
         get() = _declarations
 
     @PublishedApi
-    internal val _declarations = mutableMapOf<KClass<out Screen>, List<org.ensodai.avalonmediacard.contract.slot.SlotId>>()
+    internal val _declarations = mutableMapOf<KClass<out Screen>, List<SlotId>>()
 
     @PublishedApi
     internal val handlers = mutableMapOf<KClass<out Screen>, suspend (Screen, Uuid?) -> ScreenSlots>()
 
     @PublishedApi
-    internal val manifestLayoutBuilders = mutableMapOf<KClass<out Screen>, suspend (Uuid?) -> List<org.ensodai.avalonmediacard.contract.slot.LayoutNode>>()
+    internal val manifestLayoutBuilders = mutableMapOf<KClass<out Screen>, suspend (Uuid?) -> List<LayoutNode>>()
 
-    inline fun <reified T : Screen> declare(vararg slotIds: org.ensodai.avalonmediacard.contract.slot.SlotId) {
+    inline fun <reified T : Screen> declare(vararg slotIds: SlotId) {
         val existing = _declarations[T::class] ?: emptyList()
         _declarations[T::class] = (existing + slotIds).distinct()
     }
 
     inline fun <reified T : Screen> declare(
-        slots: List<org.ensodai.avalonmediacard.contract.slot.SlotId>,
-        noinline manifestLayout: suspend (Uuid?) -> List<org.ensodai.avalonmediacard.contract.slot.LayoutNode>
+        slots: List<SlotId>,
+        noinline manifestLayout: suspend (Uuid?) -> List<LayoutNode>
     ) {
         val existing = _declarations[T::class] ?: emptyList()
         _declarations[T::class] = (existing + slots).distinct()
         manifestLayoutBuilders[T::class] = manifestLayout
     }
 
-    fun getManifestLayoutBuilder(screenClass: KClass<out Screen>): (suspend (Uuid?) -> List<org.ensodai.avalonmediacard.contract.slot.LayoutNode>)? {
+    fun getManifestLayoutBuilder(screenClass: KClass<out Screen>): (suspend (Uuid?) -> List<LayoutNode>)? {
         return manifestLayoutBuilders[screenClass]
     }
 
@@ -107,7 +109,7 @@ class SlotRegistry {
 }
 
 data class ScreenSlots(
-    val layout: List<org.ensodai.avalonmediacard.contract.slot.LayoutNode> = emptyList(),
+    val layout: List<LayoutNode> = emptyList(),
     val flow: Flow<ScreenStreamEvent>
 )
 
@@ -128,20 +130,20 @@ class ActionRegistry {
  * Плагин использует его для выдачи потоков (видео плеера) для фильма/сериала.
  */
 class StreamRegistry {
-    private var provider: ((String, Int?, Int?) -> Flow<MediaStream>)? = null
-    private var preparer: (suspend (MediaStream) -> MediaStream)? = null
+    private var provider: ((String, Int?, Int?, Uuid?) -> Flow<MediaStream>)? = null
+    private var preparer: (suspend (MediaStream, Uuid?) -> MediaStream)? = null
     
-    fun onMedia(handler: (String, Int?, Int?) -> Flow<MediaStream>) {
+    fun onMedia(handler: (String, Int?, Int?, Uuid?) -> Flow<MediaStream>) {
         provider = handler
     }
 
-    fun onPrepare(handler: suspend (MediaStream) -> MediaStream) {
+    fun onPrepare(handler: suspend (MediaStream, Uuid?) -> MediaStream) {
         preparer = handler
     }
     
-    fun getStreams(mediaId: String, season: Int?, episode: Int?): Flow<MediaStream>? = provider?.invoke(mediaId, season, episode)
+    fun getStreams(mediaId: String, season: Int?, episode: Int?, userId: Uuid?): Flow<MediaStream>? = provider?.invoke(mediaId, season, episode, userId)
 
-    suspend fun prepareStream(stream: MediaStream): MediaStream? = preparer?.invoke(stream)
+    suspend fun prepareStream(stream: MediaStream, userId: Uuid?): MediaStream? = preparer?.invoke(stream, userId)
 }
 
 
@@ -168,6 +170,7 @@ class PluginContext(
     val userEpisodes: UserEpisodeProvider,
     val torrentMappings: TorrentMappingProvider,
     val settings: PluginSettings,
+    val userSettings: UserPluginSettings,
     val userMediaBindings: UserMediaBindingProvider,
     val slots: SlotRegistry = SlotRegistry(),
     val actions: ActionRegistry = ActionRegistry(),
@@ -189,6 +192,15 @@ interface PluginSettings {
     fun observeBoolean(key: String, defaultValue: Boolean = false): Flow<Boolean>
 }
 
+interface UserPluginSettings {
+    suspend fun getString(userId: Uuid, key: String): String?
+    suspend fun setString(userId: Uuid, key: String, value: String)
+    suspend fun getBoolean(userId: Uuid, key: String, defaultValue: Boolean = false): Boolean
+    suspend fun setBoolean(userId: Uuid, key: String, value: Boolean)
+    fun observeString(userId: Uuid, key: String, defaultValue: String? = null): Flow<String?>
+    fun observeBoolean(userId: Uuid, key: String, defaultValue: Boolean = false): Flow<Boolean>
+}
+
 class SidebarRegistry {
     private var provider: ((Uuid?) -> Flow<List<SidebarItem>>)? = null
 
@@ -200,9 +212,9 @@ class SidebarRegistry {
 }
 
 interface AffinityVectorStore {
-    val vectorUpdates: kotlinx.coroutines.flow.Flow<kotlin.uuid.Uuid>
-    suspend fun getVector(userId: Uuid): org.ensodai.avalonmediacard.contract.model.AffinityVector?
-    suspend fun saveVector(userId: Uuid, vector: org.ensodai.avalonmediacard.contract.model.AffinityVector, eventCount: Int)
+    val vectorUpdates: Flow<Uuid>
+    suspend fun getVector(userId: Uuid): AffinityVector?
+    suspend fun saveVector(userId: Uuid, vector: AffinityVector, eventCount: Int)
     suspend fun getPendingUsers(limit: Int): List<Uuid>
     suspend fun getUserEventCount(userId: Uuid): Int
     suspend fun getCachedEventCount(userId: Uuid): Int?

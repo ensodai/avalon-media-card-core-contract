@@ -1,6 +1,10 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.rpc
 
 import kotlinx.rpc.annotations.Rpc
+import org.ensodai.avalonmediacard.contract.model.IntegrationStatus
+import org.ensodai.avalonmediacard.contract.auth.LoginRequest
+import org.ensodai.avalonmediacard.contract.auth.RegisterRequest
+import org.ensodai.avalonmediacard.contract.auth.AuthResponse
 
 @Rpc
 interface AuthRpcService {

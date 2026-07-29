@@ -1,4 +1,4 @@
-package org.ensodai.avalonmediacard.contract
+package org.ensodai.avalonmediacard.contract.rpc
 
 import kotlinx.rpc.annotations.Rpc
 import org.ensodai.avalonmediacard.contract.model.TelemetryEvent
