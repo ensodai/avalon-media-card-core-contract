@@ -11,7 +11,8 @@ data class CustomListStatus(
 
 data class CustomListInfo(
     val id: Uuid,
-    val name: String
+    val name: String,
+    val itemCount: Int = 0
 )
 
 interface UserCustomListProvider {

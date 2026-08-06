@@ -18,5 +18,6 @@ data class SidebarItem(
     val screen: Screen? = null,
     val type: SidebarItemType = SidebarItemType.MENU_ITEM,
     val group: Int = 0, // 0 - Main, 1 - Collection, 2 - Custom Lists
-    val order: Int = 0
+    val order: Int = 0,
+    val itemsCount: Int? = null
 )
