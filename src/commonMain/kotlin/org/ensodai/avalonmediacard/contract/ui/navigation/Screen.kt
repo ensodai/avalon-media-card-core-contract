@@ -26,6 +26,9 @@ sealed interface Screen {
     data object MyCollection : Screen
 
     @Serializable
+    data object Admin : Screen
+
+    @Serializable
     data class Search(val initialQuery: String = "") : Screen
 
     @Serializable

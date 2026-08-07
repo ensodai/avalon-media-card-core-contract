@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.contract.auth
 
 import kotlinx.serialization.Serializable
+import org.ensodai.avalonmediacard.contract.model.UserRole
 import kotlin.uuid.Uuid
 
 @Serializable
@@ -12,6 +13,6 @@ sealed class AuthState {
     data class Authorized(
         val userId: Uuid,
         val username: String,
-        val role: String
+        val role: UserRole
     ) : AuthState()
 }

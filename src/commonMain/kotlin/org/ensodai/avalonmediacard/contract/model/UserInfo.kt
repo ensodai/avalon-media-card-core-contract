@@ -7,5 +7,5 @@ import kotlin.uuid.Uuid
 data class UserInfo(
     val id: Uuid,
     val username: String,
-    val role: String
+    val role: UserRole
 )
