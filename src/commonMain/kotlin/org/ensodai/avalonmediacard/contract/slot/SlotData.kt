@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.model.ClickstreamContext
+import org.ensodai.avalonmediacard.contract.model.MediaStatus
 
 @Serializable
 data class GenreItem(
@@ -102,10 +103,10 @@ sealed interface SlotData {
     @Serializable
     data class UserActions(
         val mediaKey: MediaKey,
-        val currentStatus: String,
+        val currentStatus: MediaStatus,
         val currentRating: Int?,
         val maxRating: Int = 10,
-        val statusOptions: Map<String, Action> = emptyMap(),
+        val statusOptions: Map<MediaStatus, Action> = emptyMap(),
         val ratingOptions: Map<Int, Action> = emptyMap()
     ) : SlotData
     

@@ -131,6 +131,7 @@ data class ResolveStreamCommand(
 
 @Serializable
 data class SearchQueryCommand(val query: String) : ServerAction
+
 @Serializable
 data class UpdateIntegrationSettingCommand(
     val integrationId: String,
