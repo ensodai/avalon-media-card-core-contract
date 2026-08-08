@@ -20,6 +20,9 @@ sealed interface Screen {
     data object Trends : Screen
 
     @Serializable
+    data object Settings : Screen
+
+    @Serializable
     data object Integrations : Screen
 
     @Serializable
