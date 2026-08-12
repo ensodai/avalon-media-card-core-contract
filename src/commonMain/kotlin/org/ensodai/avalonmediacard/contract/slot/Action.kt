@@ -34,7 +34,8 @@ data class ActionPlayVideo(
 @Serializable 
 data class ActionPreparePlayer(
     val key: MediaKey,
-    val title: String
+    val title: String,
+    val playlist: List<MediaStream> = emptyList()
 ) : LocalAction
 
 @Serializable 
@@ -150,3 +151,10 @@ data class UpdateIntegrationSettingCommand(
 
 @Serializable
 data class RefreshIntegrationsCommand(val service: String) : ServerAction
+
+@Serializable
+data class UploadCustomTorrentCommand(
+    val key: MediaKey,
+    val fileName: String,
+    val fileBytes: ByteArray
+) : ServerAction

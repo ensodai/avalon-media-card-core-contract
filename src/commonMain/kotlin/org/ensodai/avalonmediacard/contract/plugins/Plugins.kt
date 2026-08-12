@@ -157,6 +157,22 @@ interface PluginLogger {
     fun error(message: String, throwable: Throwable? = null)
 }
 
+enum class IntegrationSettingSource {
+    PERSONAL,
+    SHARED
+}
+
+data class ResolvedIntegrationSetting(
+    val value: String,
+    val source: IntegrationSettingSource
+)
+
+interface IntegrationSettingsManager {
+    suspend fun getTmdbToken(userId: kotlin.uuid.Uuid?): ResolvedIntegrationSetting?
+    suspend fun getTorrServerHost(userId: kotlin.uuid.Uuid?): ResolvedIntegrationSetting?
+    suspend fun getTorrServerAuth(userId: kotlin.uuid.Uuid?): String? // Basic auth header if present
+}
+
 /**
  * Контекст, предоставляемый плагину ядром при инициализации.
  */
@@ -171,6 +187,7 @@ class PluginContext(
     val torrentMappings: TorrentMappingProvider,
     val settings: PluginSettings,
     val userSettings: UserPluginSettings,
+    val integrationManager: IntegrationSettingsManager,
     val userMediaBindings: UserMediaBindingProvider,
     val slots: SlotRegistry = SlotRegistry(),
     val actions: ActionRegistry = ActionRegistry(),

@@ -7,5 +7,6 @@ import kotlin.uuid.Uuid
 data class UserInfo(
     val id: Uuid,
     val username: String,
-    val role: UserRole
+    val role: UserRole,
+    val status: UserStatus = UserStatus.ACTIVE
 )
