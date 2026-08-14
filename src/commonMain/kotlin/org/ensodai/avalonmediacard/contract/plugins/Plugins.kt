@@ -171,6 +171,7 @@ interface IntegrationSettingsManager {
     suspend fun getTmdbToken(userId: kotlin.uuid.Uuid?): ResolvedIntegrationSetting?
     suspend fun getTorrServerHost(userId: kotlin.uuid.Uuid?): ResolvedIntegrationSetting?
     suspend fun getTorrServerAuth(userId: kotlin.uuid.Uuid?): String? // Basic auth header if present
+    suspend fun getTorrServerUseGst(userId: kotlin.uuid.Uuid?): Boolean = false
 }
 
 /**

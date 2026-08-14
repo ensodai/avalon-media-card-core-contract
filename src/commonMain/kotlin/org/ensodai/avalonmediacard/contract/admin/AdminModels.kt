@@ -29,15 +29,21 @@ data class UserDto(
 @Serializable
 data class GlobalIntegrationSettingsDto(
     val tmdbReadToken: String?,
+    val tmdbShareWithUsers: Boolean = true,
     val torrServerHost: String?,
     val torrServerLogin: String?,
-    val torrServerPassword: String?
+    val torrServerPassword: String?,
+    val torrServerShareWithUsers: Boolean = false,
+    val torrServerUseGst: Boolean = false
 )
 
 @Serializable
 data class UpdateGlobalIntegrationSettingsRequest(
     val tmdbReadToken: String?,
+    val tmdbShareWithUsers: Boolean? = null,
     val torrServerHost: String?,
     val torrServerLogin: String?,
-    val torrServerPassword: String?
+    val torrServerPassword: String?,
+    val torrServerShareWithUsers: Boolean? = null,
+    val torrServerUseGst: Boolean? = null
 )

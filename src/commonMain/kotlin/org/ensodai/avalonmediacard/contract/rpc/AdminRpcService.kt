@@ -18,4 +18,6 @@ interface AdminRpcService {
     
     suspend fun getGlobalIntegrationSettings(): org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
     suspend fun updateGlobalIntegrationSettings(request: org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest): AdminActionResponse
+    suspend fun testTmdbConnection(token: String): AdminActionResponse
+    suspend fun testTorrServerConnection(host: String, login: String?, password: String?): AdminActionResponse
 }
