@@ -167,11 +167,19 @@ data class ResolvedIntegrationSetting(
     val source: IntegrationSettingSource
 )
 
+data class ResolvedSearchEngineSetting(
+    val url: String,
+    val apiKey: String,
+    val source: IntegrationSettingSource
+)
+
 interface IntegrationSettingsManager {
-    suspend fun getTmdbToken(userId: kotlin.uuid.Uuid?): ResolvedIntegrationSetting?
-    suspend fun getTorrServerHost(userId: kotlin.uuid.Uuid?): ResolvedIntegrationSetting?
-    suspend fun getTorrServerAuth(userId: kotlin.uuid.Uuid?): String? // Basic auth header if present
-    suspend fun getTorrServerUseGst(userId: kotlin.uuid.Uuid?): Boolean = false
+    suspend fun getTmdbToken(userId: Uuid?): ResolvedIntegrationSetting?
+    suspend fun getTorrServerHost(userId: Uuid?): ResolvedIntegrationSetting?
+    suspend fun getTorrServerAuth(userId: Uuid?): String? // Basic auth header if present
+    suspend fun getTorrServerUseGst(userId: Uuid?): Boolean = false
+    suspend fun getProwlarrSettings(userId: Uuid?): ResolvedSearchEngineSetting? = null
+    suspend fun getJackettSettings(userId: Uuid?): ResolvedSearchEngineSetting? = null
 }
 
 /**

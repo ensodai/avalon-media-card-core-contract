@@ -34,7 +34,13 @@ data class GlobalIntegrationSettingsDto(
     val torrServerLogin: String?,
     val torrServerPassword: String?,
     val torrServerShareWithUsers: Boolean = false,
-    val torrServerUseGst: Boolean = false
+    val torrServerUseGst: Boolean = false,
+    val prowlarrUrl: String? = null,
+    val prowlarrApiKey: String? = null,
+    val prowlarrShareWithUsers: Boolean = false,
+    val jackettUrl: String? = null,
+    val jackettApiKey: String? = null,
+    val jackettShareWithUsers: Boolean = false
 )
 
 @Serializable
@@ -45,5 +51,11 @@ data class UpdateGlobalIntegrationSettingsRequest(
     val torrServerLogin: String?,
     val torrServerPassword: String?,
     val torrServerShareWithUsers: Boolean? = null,
-    val torrServerUseGst: Boolean? = null
+    val torrServerUseGst: Boolean? = null,
+    val prowlarrUrl: String? = null,
+    val prowlarrApiKey: String? = null,
+    val prowlarrShareWithUsers: Boolean? = null,
+    val jackettUrl: String? = null,
+    val jackettApiKey: String? = null,
+    val jackettShareWithUsers: Boolean? = null
 )
