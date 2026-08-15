@@ -59,3 +59,20 @@ data class UpdateGlobalIntegrationSettingsRequest(
     val jackettApiKey: String? = null,
     val jackettShareWithUsers: Boolean? = null
 )
+
+@Serializable
+data class ServerSystemInfoDto(
+    val coreVersion: String,
+    val protocolVersion: String,
+    val buildDate: String,
+    val uptimeSeconds: Long,
+    val databaseType: String,
+    val activeUsersCount: Long,
+    val totalUsersCount: Long,
+    val cachedMediaCount: Long,
+    val cachedDiscoverQueriesCount: Long,
+    val cachedUserFeedsCount: Long,
+    val loadedPluginsCount: Int,
+    val javaVersion: String,
+    val osName: String
+)

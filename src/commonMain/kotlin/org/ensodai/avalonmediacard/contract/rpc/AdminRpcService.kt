@@ -4,6 +4,7 @@ import kotlinx.rpc.annotations.Rpc
 import org.ensodai.avalonmediacard.contract.admin.AdminActionResponse
 import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
+import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UserDto
 import org.ensodai.avalonmediacard.contract.model.UserRole
@@ -25,4 +26,9 @@ interface AdminRpcService {
     suspend fun testTorrServerConnection(host: String, login: String?, password: String?): AdminActionResponse
     suspend fun testProwlarrConnection(url: String, apiKey: String): AdminActionResponse
     suspend fun testJackettConnection(url: String, apiKey: String): AdminActionResponse
+
+    suspend fun getSystemInfo(): ServerSystemInfoDto
+    suspend fun clearDiscoverCache(): AdminActionResponse
+    suspend fun clearFeedCache(): AdminActionResponse
+    suspend fun clearMediaCache(): AdminActionResponse
 }
