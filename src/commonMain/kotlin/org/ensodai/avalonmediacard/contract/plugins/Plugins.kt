@@ -9,6 +9,7 @@ import kotlinx.serialization.modules.SerializersModule
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import org.ensodai.avalonmediacard.contract.model.SidebarItem
 import org.ensodai.avalonmediacard.contract.model.AffinityVector
+import org.ensodai.avalonmediacard.contract.model.DynamicSection
 import org.ensodai.avalonmediacard.contract.model.MediaCatalog
 import org.ensodai.avalonmediacard.contract.slot.ActionResult
 import org.ensodai.avalonmediacard.contract.slot.LayoutNode
@@ -182,6 +183,13 @@ interface IntegrationSettingsManager {
     suspend fun getJackettSettings(userId: Uuid?): ResolvedSearchEngineSetting? = null
 }
 
+interface UserFeedCacheProvider {
+    suspend fun getSections(userId: Uuid, scope: String, language: String = "ru-RU"): List<DynamicSection>?
+    suspend fun saveSections(userId: Uuid, scope: String, language: String = "ru-RU", sections: List<DynamicSection>)
+    suspend fun invalidateUser(userId: Uuid)
+    suspend fun invalidateAll()
+}
+
 /**
  * Контекст, предоставляемый плагину ядром при инициализации.
  */
@@ -206,6 +214,12 @@ class PluginContext(
     val telemetry: TelemetryProvider,
     val affinityStore: AffinityVectorStore,
     val genreDictionary: GenreDictionaryProvider,
+    val feedCache: UserFeedCacheProvider = object : UserFeedCacheProvider {
+        override suspend fun getSections(userId: Uuid, scope: String, language: String): List<DynamicSection>? = null
+        override suspend fun saveSections(userId: Uuid, scope: String, language: String, sections: List<DynamicSection>) {}
+        override suspend fun invalidateUser(userId: Uuid) {}
+        override suspend fun invalidateAll() {}
+    },
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 )
 
