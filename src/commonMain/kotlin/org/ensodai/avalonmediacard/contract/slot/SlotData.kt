@@ -147,7 +147,9 @@ sealed interface SlotData {
     @Serializable
     data class MediaSources(
         val sources: List<MediaStream>,
-        val mediaKey: MediaKey? = null
+        val mediaKey: MediaKey? = null,
+        val providerId: String? = null,
+        val providerTitle: String? = null
     ) : SlotData
 
     @Serializable

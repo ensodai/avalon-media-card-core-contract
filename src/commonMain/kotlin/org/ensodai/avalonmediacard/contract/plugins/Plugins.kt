@@ -6,17 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.modules.SerializersModule
+import org.ensodai.avalonmediacard.contract.model.*
+import org.ensodai.avalonmediacard.contract.slot.*
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
-import org.ensodai.avalonmediacard.contract.model.SidebarItem
-import org.ensodai.avalonmediacard.contract.model.AffinityVector
-import org.ensodai.avalonmediacard.contract.model.DynamicSection
-import org.ensodai.avalonmediacard.contract.model.MediaCatalog
-import org.ensodai.avalonmediacard.contract.slot.ActionResult
-import org.ensodai.avalonmediacard.contract.slot.LayoutNode
-import org.ensodai.avalonmediacard.contract.slot.ServerAction
-import org.ensodai.avalonmediacard.contract.slot.ScreenStreamEvent
-import org.ensodai.avalonmediacard.contract.slot.SlotId
-
 import kotlin.reflect.KClass
 import kotlin.uuid.Uuid
 
@@ -130,10 +122,13 @@ class ActionRegistry {
  * Реестр потоков (видео/аудио) плагина.
  * Плагин использует его для выдачи потоков (видео плеера) для фильма/сериала.
  */
-class StreamRegistry {
+class StreamRegistry(
+    private val fallbackProvider: (suspend (MediaKey, String, Uuid?) -> List<MediaStream>?)? = null
+) {
     private var provider: ((String, Int?, Int?, Uuid?) -> Flow<MediaStream>)? = null
     private var preparer: (suspend (MediaStream, Uuid?) -> MediaStream)? = null
-    
+    private var playlistProvider: (suspend (MediaKey, String, Uuid?) -> List<MediaStream>)? = null
+
     fun onMedia(handler: (String, Int?, Int?, Uuid?) -> Flow<MediaStream>) {
         provider = handler
     }
@@ -141,12 +136,19 @@ class StreamRegistry {
     fun onPrepare(handler: suspend (MediaStream, Uuid?) -> MediaStream) {
         preparer = handler
     }
-    
-    fun getStreams(mediaId: String, season: Int?, episode: Int?, userId: Uuid?): Flow<MediaStream>? = provider?.invoke(mediaId, season, episode, userId)
+
+    fun onPlaylist(handler: suspend (MediaKey, String, Uuid?) -> List<MediaStream>) {
+        playlistProvider = handler
+    }
+
+    fun getStreams(mediaId: String, season: Int?, episode: Int?, userId: Uuid?): Flow<MediaStream>? =
+        provider?.invoke(mediaId, season, episode, userId)
 
     suspend fun prepareStream(stream: MediaStream, userId: Uuid?): MediaStream? = preparer?.invoke(stream, userId)
-}
 
+    suspend fun getPlaylist(key: MediaKey, sourceId: String, userId: Uuid?): List<MediaStream>? =
+        playlistProvider?.invoke(key, sourceId, userId) ?: fallbackProvider?.invoke(key, sourceId, userId)
+}
 
 
 /**
@@ -191,6 +193,17 @@ interface UserFeedCacheProvider {
 }
 
 /**
+ * Интерфейс для отправки асинхронных обновлений слотов от плагинов в ядро.
+ */
+interface SlotUpdater {
+    suspend fun emitSlotUpdate(userId: Uuid, key: MediaKey, update: SlotUpdate)
+}
+
+object DummySlotUpdater : SlotUpdater {
+    override suspend fun emitSlotUpdate(userId: Uuid, key: MediaKey, update: SlotUpdate) {}
+}
+
+/**
  * Контекст, предоставляемый плагину ядром при инициализации.
  */
 class PluginContext(
@@ -206,6 +219,7 @@ class PluginContext(
     val userSettings: UserPluginSettings,
     val integrationManager: IntegrationSettingsManager,
     val userMediaBindings: UserMediaBindingProvider,
+    val updater: SlotUpdater = DummySlotUpdater,
     val slots: SlotRegistry = SlotRegistry(),
     val actions: ActionRegistry = ActionRegistry(),
     val streams: StreamRegistry = StreamRegistry(),
@@ -216,7 +230,14 @@ class PluginContext(
     val genreDictionary: GenreDictionaryProvider,
     val feedCache: UserFeedCacheProvider = object : UserFeedCacheProvider {
         override suspend fun getSections(userId: Uuid, scope: String, language: String): List<DynamicSection>? = null
-        override suspend fun saveSections(userId: Uuid, scope: String, language: String, sections: List<DynamicSection>) {}
+        override suspend fun saveSections(
+            userId: Uuid,
+            scope: String,
+            language: String,
+            sections: List<DynamicSection>
+        ) {
+        }
+
         override suspend fun invalidateUser(userId: Uuid) {}
         override suspend fun invalidateAll() {}
     },
