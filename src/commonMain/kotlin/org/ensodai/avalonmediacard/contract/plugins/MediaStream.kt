@@ -15,6 +15,15 @@ enum class StreamType {
 }
 
 /**
+ * Вариант качества видеопотока (для CDN, HLS, DASH и прямых ссылок).
+ */
+@Serializable
+data class VideoQuality(
+    val label: String, // Например: "1080p", "720p", "480p", "4K", "Авто"
+    val url: String    // Прямой URL потока для данного качества
+)
+
+/**
  * Результат поиска видеопотока.
  */
 @Serializable
@@ -45,9 +54,10 @@ data class MediaStream(
     val isWatched: Boolean = false,
     val userRating: Int? = null,
     val lastWatchedAtEpochMs: Long? = null,
-    // Звуковые дорожки и субтитры конкретного эпизода/файла
+    // Звуковые дорожки, субтитры и варианты качества видео
     val audioTracks: List<AudioTrack> = emptyList(),
-    val subtitleTracks: List<SubtitleTrack> = emptyList()
+    val subtitleTracks: List<SubtitleTrack> = emptyList(),
+    val qualityVariants: List<VideoQuality> = emptyList()
 ) {
     val canonicalId: String
         get() = when {
