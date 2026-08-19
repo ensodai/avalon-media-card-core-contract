@@ -19,6 +19,7 @@ enum class StreamType {
  */
 @Serializable
 data class MediaStream(
+    val id: String = "",
     val title: String,
     val url: String,
     val type: StreamType,
@@ -47,4 +48,12 @@ data class MediaStream(
     // Звуковые дорожки и субтитры конкретного эпизода/файла
     val audioTracks: List<AudioTrack> = emptyList(),
     val subtitleTracks: List<SubtitleTrack> = emptyList()
-)
+) {
+    val canonicalId: String
+        get() = when {
+            id.isNotBlank() -> id
+            seasonNumber != null && episodeNumber != null -> "s${seasonNumber}e${episodeNumber}"
+            isMapped -> "movie"
+            else -> url
+        }
+}

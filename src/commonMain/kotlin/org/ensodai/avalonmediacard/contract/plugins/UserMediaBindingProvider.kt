@@ -1,5 +1,7 @@
 package org.ensodai.avalonmediacard.contract.plugins
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.Serializable
 import kotlin.uuid.Uuid
 
@@ -26,6 +28,11 @@ interface UserMediaBindingProvider {
      * Возвращает любую активную привязку источника для пользователя и медиа.
      */
     suspend fun getActiveBinding(userId: Uuid, mediaId: String): UserMediaBinding? = null
+
+    /**
+     * Наблюдает за активной привязкой источника для пользователя и медиа.
+     */
+    fun observeActiveBinding(userId: Uuid, mediaId: String): Flow<UserMediaBinding?> = flowOf(null)
 
     /**
      * Сохраняет привязку источника для пользователя.

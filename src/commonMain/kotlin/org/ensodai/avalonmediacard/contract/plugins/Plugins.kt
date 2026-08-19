@@ -123,13 +123,14 @@ class ActionRegistry {
  * Плагин использует его для выдачи потоков (видео плеера) для фильма/сериала.
  */
 class StreamRegistry(
-    private val fallbackProvider: (suspend (MediaKey, String, Uuid?) -> List<MediaStream>?)? = null
+    private val fallbackProvider: (suspend (MediaKey, String, Uuid?, String?) -> List<MediaStream>?)? = null,
+    private val fallbackPreparer: (suspend (MediaStream, Uuid?) -> MediaStream?)? = null
 ) {
-    private var provider: ((String, Int?, Int?, Uuid?) -> Flow<MediaStream>)? = null
+    private var provider: ((MediaKey, Int?, Int?, Uuid?) -> Flow<MediaStream>)? = null
     private var preparer: (suspend (MediaStream, Uuid?) -> MediaStream)? = null
     private var playlistProvider: (suspend (MediaKey, String, Uuid?) -> List<MediaStream>)? = null
 
-    fun onMedia(handler: (String, Int?, Int?, Uuid?) -> Flow<MediaStream>) {
+    fun onMedia(handler: (MediaKey, Int?, Int?, Uuid?) -> Flow<MediaStream>) {
         provider = handler
     }
 
@@ -141,13 +142,25 @@ class StreamRegistry(
         playlistProvider = handler
     }
 
-    fun getStreams(mediaId: String, season: Int?, episode: Int?, userId: Uuid?): Flow<MediaStream>? =
-        provider?.invoke(mediaId, season, episode, userId)
+    fun getStreams(
+        key: MediaKey,
+        season: Int?,
+        episode: Int?,
+        userId: Uuid?
+    ): Flow<MediaStream>? =
+        provider?.invoke(key, season, episode, userId)
 
-    suspend fun prepareStream(stream: MediaStream, userId: Uuid?): MediaStream? = preparer?.invoke(stream, userId)
+    suspend fun prepareStream(stream: MediaStream, userId: Uuid? = null): MediaStream? =
+        preparer?.invoke(stream, userId) ?: fallbackPreparer?.invoke(stream, userId)
 
-    suspend fun getPlaylist(key: MediaKey, sourceId: String, userId: Uuid?): List<MediaStream>? =
-        playlistProvider?.invoke(key, sourceId, userId) ?: fallbackProvider?.invoke(key, sourceId, userId)
+    suspend fun prepareDirectStream(stream: MediaStream, userId: Uuid? = null): MediaStream? =
+        preparer?.invoke(stream, userId)
+
+    suspend fun getPlaylist(key: MediaKey, sourceId: String, userId: Uuid? = null, providerId: String? = null): List<MediaStream>? =
+        playlistProvider?.invoke(key, sourceId, userId) ?: fallbackProvider?.invoke(key, sourceId, userId, providerId)
+
+    suspend fun getDirectPlaylist(key: MediaKey, sourceId: String, userId: Uuid? = null): List<MediaStream>? =
+        playlistProvider?.invoke(key, sourceId, userId)
 }
 
 

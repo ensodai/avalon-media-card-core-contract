@@ -22,6 +22,7 @@ data class ActionNavigate(val screen: Screen) : LocalAction
 data class ActionPlayVideo(
     val url: String,
     val title: String,
+    val streamId: String? = null,
     val durationSeconds: Double? = null,
     val startPositionSeconds: Long? = null,
     val playlist: List<MediaStream> = emptyList(),
@@ -127,6 +128,14 @@ data class FetchMediaSourcesCommand(
 @Serializable
 data class ResolveStreamCommand(
     val stream: MediaStream
+) : ServerAction
+
+@Serializable
+data class SelectMediaSourceCommand(
+    val key: MediaKey,
+    val providerId: String,
+    val sourceId: String,
+    val targetEpisode: Int? = null
 ) : ServerAction
 
 
