@@ -221,6 +221,7 @@ object DummySlotUpdater : SlotUpdater {
  */
 class PluginContext(
     val pluginDir: String,
+    val pluginName: String = "",
     val logger: PluginLogger,
     val httpClient: HttpClient,
     val catalog: MediaCatalog,

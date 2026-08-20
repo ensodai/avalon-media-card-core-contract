@@ -48,6 +48,7 @@ data class MediaStream(
     val episodeName: String? = null,
     val seasonNumber: Int? = null,
     val episodeNumber: Int? = null,
+    val episodesCount: Int? = null,
     val episodePosterUrl: String? = null,
     // Поля для прогресса просмотра
     val watchedProgressSeconds: Long? = null,
