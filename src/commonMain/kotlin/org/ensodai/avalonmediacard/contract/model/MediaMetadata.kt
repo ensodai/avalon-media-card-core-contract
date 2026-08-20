@@ -59,6 +59,7 @@ data class GenreMetadata(
 data class MediaMetadata(
     val title: String,
     val originalTitle: String? = null,
+    val imdbId: String? = null,
     val subtitle: String? = null,
     val description: String? = null,
     val posterUrl: String? = null,

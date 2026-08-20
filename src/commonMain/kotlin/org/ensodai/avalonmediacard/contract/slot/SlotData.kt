@@ -145,11 +145,19 @@ sealed interface SlotData {
     ) : SlotData
 
     @Serializable
+    data class SourceSubFilter(
+        val id: String,
+        val label: String,
+        val count: Int? = null
+    )
+
+    @Serializable
     data class MediaSources(
         val sources: List<MediaStream>,
         val mediaKey: MediaKey? = null,
         val providerId: String? = null,
-        val providerTitle: String? = null
+        val providerTitle: String? = null,
+        val subFilters: List<SourceSubFilter> = emptyList()
     ) : SlotData
 
     @Serializable

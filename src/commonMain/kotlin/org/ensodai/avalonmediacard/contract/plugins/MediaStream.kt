@@ -58,7 +58,10 @@ data class MediaStream(
     // Звуковые дорожки, субтитры и варианты качества видео
     val audioTracks: List<AudioTrack> = emptyList(),
     val subtitleTracks: List<SubtitleTrack> = emptyList(),
-    val qualityVariants: List<VideoQuality> = emptyList()
+    val qualityVariants: List<VideoQuality> = emptyList(),
+    // Универсальный подчипс фильтрации (например: season_1, tracker_rutor, voice_lostfilm)
+    val subFilterId: String? = null,
+    val subFilterLabel: String? = null
 ) {
     val canonicalId: String
         get() = when {
