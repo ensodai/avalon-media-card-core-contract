@@ -35,6 +35,7 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:0.10.2")
                 api("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-cbor:0.10.2")
                 implementation("io.ktor:ktor-client-core:3.5.0")
+                api("co.touchlab:kermit:2.1.0")
             }
         }
         val commonTest by getting {

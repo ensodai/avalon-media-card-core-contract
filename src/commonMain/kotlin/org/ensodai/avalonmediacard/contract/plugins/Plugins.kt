@@ -6,6 +6,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.modules.SerializersModule
+import org.ensodai.avalonmediacard.contract.logging.AppLogger
+import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.contract.model.*
 import org.ensodai.avalonmediacard.contract.slot.*
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
@@ -165,13 +167,23 @@ class StreamRegistry(
 
 
 /**
- * Простейший интерфейс логгера для плагинов.
+ * Интерфейс логгера для плагинов с поддержкой уровней (trace, debug, info, warn, error),
+ * ленивой интерполяции строк и автоматической изоляции по тегу плагина.
  */
-interface PluginLogger {
-    fun info(message: String)
-    fun warn(message: String)
-    fun error(message: String, throwable: Throwable? = null)
+interface PluginLogger : AppLogger {
+    fun info(message: String) = i(message)
+    fun warn(message: String) = w(message)
+    fun error(message: String, throwable: Throwable? = null) = e(message, throwable)
+    fun debug(message: String) = d(message)
 }
+
+/**
+ * Стандартная реализация логгера для плагинов, делегирующая в мультиплатформенный [AppLogger].
+ */
+class DefaultPluginLogger(
+    val pluginName: String,
+    private val delegate: AppLogger = AppLogging.logger(pluginName)
+) : PluginLogger, AppLogger by delegate
 
 enum class IntegrationSettingSource {
     PERSONAL,
