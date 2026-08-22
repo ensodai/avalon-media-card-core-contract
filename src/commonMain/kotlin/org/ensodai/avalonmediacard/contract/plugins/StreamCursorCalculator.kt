@@ -46,24 +46,47 @@ fun resolveTargetStream(
     targetSeason: Int? = null,
     targetEpisode: Int? = null
 ): Pair<MediaStream, StreamCursor?>? {
-    if (targetSeason != null && targetEpisode != null) {
-        val target = mappedStreams.find { it.seasonNumber == targetSeason && it.episodeNumber == targetEpisode }
-            ?: return null
-        val cursor = StreamCursor(
-            season = targetSeason,
-            episode = targetEpisode,
-            progressSeconds = target.watchedProgressSeconds,
-            episodeName = target.episodeName
-        )
-        return target to cursor
+    val mapped = mappedStreams.filter { it.isMapped }
+    if (mapped.isEmpty()) {
+        return mappedStreams.firstOrNull()?.let { it to null }
     }
 
-    val cursor = calculateTargetCursor(mappedStreams)
+    if (targetSeason != null && targetEpisode != null) {
+        val target = mapped.find { it.seasonNumber == targetSeason && it.episodeNumber == targetEpisode }
+            ?: mapped.firstOrNull { it.seasonNumber == targetSeason }
+            ?: mapped.firstOrNull()
+        val cursor = target?.let {
+            StreamCursor(
+                season = it.seasonNumber ?: targetSeason,
+                episode = it.episodeNumber ?: targetEpisode,
+                progressSeconds = it.watchedProgressSeconds,
+                episodeName = it.episodeName
+            )
+        }
+        return if (target != null) target to cursor else null
+    }
+
+    if (targetSeason != null) {
+        val seasonStreams = mapped.filter { it.seasonNumber == targetSeason }
+        if (seasonStreams.isNotEmpty()) {
+            val cursor = calculateTargetCursor(seasonStreams)
+            val stream = if (cursor != null) {
+                seasonStreams.find { it.seasonNumber == cursor.season && it.episodeNumber == cursor.episode }
+                    ?: seasonStreams.first()
+            } else {
+                seasonStreams.first()
+            }
+            return stream to cursor
+        }
+    }
+
+    val cursor = calculateTargetCursor(mapped)
     val stream = if (cursor != null) {
-        mappedStreams.find { it.seasonNumber == cursor.season && it.episodeNumber == cursor.episode }
-            ?: mappedStreams.firstOrNull { it.isMapped }
+        mapped.find { it.seasonNumber == cursor.season && it.episodeNumber == cursor.episode }
+            ?: mapped.firstOrNull()
     } else {
-        mappedStreams.firstOrNull { it.isMapped }
+        mapped.firstOrNull()
     }
     return stream?.let { it to cursor }
 }
+

@@ -36,22 +36,13 @@ data class ActionPlayVideo(
 data class ActionPreparePlayer(
     val key: MediaKey,
     val title: String,
-    val playlist: List<MediaStream> = emptyList()
-) : LocalAction
-
-@Serializable 
-data class ActionPrepareSources(
-    val key: MediaKey
+    val playlist: List<MediaStream> = emptyList(),
+    val targetSeason: Int? = null,
+    val targetEpisode: Int? = null
 ) : LocalAction
 
 @Serializable 
 data class ActionOpenUrl(val url: String) : LocalAction
-
-@Serializable
-data class ActionToggleSources(val expanded: Boolean) : LocalAction
-
-@Serializable
-data object ActionClosePlayer : LocalAction
 
 
 // --- Server Actions (RPC команды на сервер) ---
@@ -68,22 +59,6 @@ fun Action.withParameter(key: String, value: Any): Action {
 
 interface UserAwareCommand {
     var userId: Uuid?
-}
-
-@Serializable
-@SerialName("PlayEpisodeCommand")
-data class PlayEpisodeCommand(
-    val key: MediaKey,
-    val seasonNumber: Int = 0,
-    val episodeNumber: Int = 0
-) : TemplateAction {
-    override fun withParameter(key: String, value: Any): TemplateAction {
-        return when (key) {
-            "seasonNumber" -> copy(seasonNumber = value.toString().toIntOrNull() ?: seasonNumber)
-            "episodeNumber" -> copy(episodeNumber = value.toString().toIntOrNull() ?: episodeNumber)
-            else -> this
-        }
-    }
 }
 
 @Serializable
@@ -118,24 +93,6 @@ data class RateEpisodeCommand(
     val seasonNumber: Int,
     val episodeNumber: Int,
     val rating: Int
-) : ServerAction
-@Serializable
-data class FetchMediaSourcesCommand(
-    val key: MediaKey,
-    val forceRefresh: Boolean = false
-) : ServerAction
-
-@Serializable
-data class ResolveStreamCommand(
-    val stream: MediaStream
-) : ServerAction
-
-@Serializable
-data class SelectMediaSourceCommand(
-    val key: MediaKey,
-    val providerId: String,
-    val sourceId: String,
-    val targetEpisode: Int? = null
 ) : ServerAction
 
 
