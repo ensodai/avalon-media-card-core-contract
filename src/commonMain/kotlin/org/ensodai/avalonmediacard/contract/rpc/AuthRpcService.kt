@@ -15,4 +15,5 @@ interface AuthRpcService {
     suspend fun getOAuthUrl(service: String): String
     suspend fun exchangeOAuthCode(service: String, code: String): Boolean
     suspend fun getIntegrationsStatus(): List<IntegrationStatus>
+    suspend fun updateLocale(locale: String): Boolean
 }

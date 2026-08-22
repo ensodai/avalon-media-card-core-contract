@@ -6,6 +6,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.modules.SerializersModule
+import org.ensodai.avalonmediacard.contract.i18n.EmptyPluginI18n
+import org.ensodai.avalonmediacard.contract.i18n.PluginI18n
 import org.ensodai.avalonmediacard.contract.logging.AppLogger
 import org.ensodai.avalonmediacard.contract.logging.AppLogging
 import org.ensodai.avalonmediacard.contract.model.*
@@ -237,6 +239,7 @@ class PluginContext(
     val logger: PluginLogger,
     val httpClient: HttpClient,
     val catalog: MediaCatalog,
+    val i18n: PluginI18n = EmptyPluginI18n,
     val userMovies: UserMovieProvider,
     val userCustomLists: UserCustomListProvider,
     val userEpisodes: UserEpisodeProvider,
