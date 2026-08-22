@@ -228,7 +228,49 @@ class PluginContext(
     val userMovies: UserMovieProvider,
     val userCustomLists: UserCustomListProvider,
     val userEpisodes: UserEpisodeProvider,
-    val torrentMappings: TorrentMappingProvider,
+    val sourceMappings: SourceMappingProvider = object : SourceMappingProvider {
+        override suspend fun getMappingsBySourceId(sourceId: String): List<SourceMapping> = emptyList()
+        override suspend fun getMappingsByMediaId(mediaId: String): List<SourceMapping> = emptyList()
+        override suspend fun saveMapping(mapping: SourceMapping): SourceMapping = mapping
+        override suspend fun saveMappingsBatch(mappings: List<SourceMapping>) {}
+        override suspend fun clearMappingsByMediaId(mediaId: String) {}
+        override suspend fun clearMappingsBySourceId(sourceId: String) {}
+    },
+    val torrentMappings: TorrentMappingProvider = object : TorrentMappingProvider {
+        override suspend fun getMappingsByHash(torrentHash: String): List<TorrentMapping> =
+            sourceMappings.getMappingsBySourceId(torrentHash).map { it.toTorrentMapping() }
+        override suspend fun getMappingsByMediaId(mediaId: String): List<TorrentMapping> =
+            sourceMappings.getMappingsByMediaId(mediaId).map { it.toTorrentMapping() }
+        override suspend fun saveMapping(
+            torrentHash: String,
+            filePath: String,
+            seasons: List<Int>?,
+            episodes: List<Int>?,
+            isAbsolute: Boolean,
+            isManual: Boolean,
+            mediaId: String?,
+            fileIndex: Int?,
+            fileSize: Long?
+        ): TorrentMapping {
+            val saved = sourceMappings.saveMapping(
+                SourceMapping(
+                    sourceType = "torrserver",
+                    sourceId = torrentHash,
+                    itemKey = filePath,
+                    seasons = seasons,
+                    episodes = episodes,
+                    isAbsolute = isAbsolute,
+                    isManual = isManual,
+                    mediaId = mediaId,
+                    fileIndex = fileIndex,
+                    fileSize = fileSize
+                )
+            )
+            return saved.toTorrentMapping()
+        }
+        override suspend fun clearMappingsByMediaId(mediaId: String) =
+            sourceMappings.clearMappingsByMediaId(mediaId)
+    },
     val settings: PluginSettings,
     val userSettings: UserPluginSettings,
     val integrationManager: IntegrationSettingsManager,
