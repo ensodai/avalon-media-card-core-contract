@@ -44,6 +44,10 @@ data class ActionPreparePlayer(
 @Serializable 
 data class ActionOpenUrl(val url: String) : LocalAction
 
+@Serializable
+data class ActionOpenSources(val key: MediaKey) : LocalAction
+
+
 
 // --- Server Actions (RPC команды на сервер) ---
 // Открытый интерфейс для полиморфизма (плагины будут добавлять свои экшены)
