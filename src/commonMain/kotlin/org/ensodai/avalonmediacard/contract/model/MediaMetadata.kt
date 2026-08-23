@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ActorMetadata(
     val name: String,
+    val originalName: String? = null,
     val character: String? = null,
     val profileUrl: String? = null,
     val id: String? = null
@@ -84,5 +85,66 @@ data class MediaMetadata(
     val numberOfEpisodes: Int? = null,
     val status: String? = null,
     val network: String? = null,
-    val seasons: List<SeasonMetadata> = emptyList()
+    val seasons: List<SeasonMetadata> = emptyList(),
+
+    // Localized variants for user customization
+    val localizedPosters: Map<String, String> = emptyMap(),
+    val localizedOverviews: Map<String, String> = emptyMap()
 )
+
+fun MediaMetadata.withUserSettings(settings: UserSettingsDto?): MediaMetadata {
+    if (settings == null) return this
+
+    val isOriginalTitle = settings.titleLanguage == "original" || settings.titleMode == TitleDisplayMode.ORIGINAL
+    val effectiveTitle = if (isOriginalTitle) {
+        originalTitle?.takeIf { it.isNotBlank() } ?: title
+    } else {
+        title
+    }
+
+    val effectivePosterUrl = when (val lang = settings.posterLanguage) {
+        null -> posterUrl
+        "original" -> localizedPosters["original"] ?: localizedPosters["null"] ?: posterUrl
+        else -> localizedPosters[lang] ?: posterUrl
+    }
+
+    val effectiveDescription = when (val lang = settings.overviewLanguage) {
+        null -> description
+        else -> localizedOverviews[lang]?.takeIf { it.isNotBlank() } ?: description
+    }
+
+    val isEnglishOrOriginal = settings.titleMode == TitleDisplayMode.ORIGINAL ||
+            settings.uiLocale.startsWith("en", ignoreCase = true)
+
+    val effectiveCast = if (isEnglishOrOriginal && cast.isNotEmpty()) {
+        cast.map { actor ->
+            val orig = actor.originalName?.takeIf { it.isNotBlank() }
+            if (orig != null && orig != actor.name) {
+                actor.copy(name = orig)
+            } else {
+                actor
+            }
+        }
+    } else {
+        cast
+    }
+
+    return copy(
+        title = effectiveTitle,
+        posterUrl = effectivePosterUrl,
+        description = effectiveDescription,
+        cast = effectiveCast
+    )
+}
+
+fun List<GenreMetadata>.withLocalizedGenres(genreDict: Map<String, String>?): List<GenreMetadata> {
+    if (genreDict == null || genreDict.isEmpty()) return this
+    return map { g ->
+        val locName = genreDict[g.id.toString()]
+        if (locName != null && locName.isNotBlank() && locName != "Unknown") {
+            g.copy(name = locName)
+        } else {
+            g
+        }
+    }
+}

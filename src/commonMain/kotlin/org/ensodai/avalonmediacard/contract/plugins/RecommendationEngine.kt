@@ -6,6 +6,6 @@ import kotlin.uuid.Uuid
 
 interface RecommendationEngine {
     suspend fun getAffinityVector(userId: Uuid): AffinityVector
-    suspend fun generateDashboard(userId: Uuid): List<DynamicSection>
-    suspend fun generateTab(userId: Uuid, scope: String): List<DynamicSection>
+    suspend fun generateDashboard(userId: Uuid, language: String = "ru"): List<DynamicSection>
+    suspend fun generateTab(userId: Uuid, scope: String, language: String = "ru"): List<DynamicSection>
 }

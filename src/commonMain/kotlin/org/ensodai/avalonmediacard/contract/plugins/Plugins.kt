@@ -312,8 +312,15 @@ class PluginContext(
         override suspend fun invalidateUser(userId: Uuid) {}
         override suspend fun invalidateAll() {}
     },
+    val userGlobalSettings: UserGlobalSettingsProvider = object : UserGlobalSettingsProvider {
+        override suspend fun getUserSettings(userId: Uuid): UserSettingsDto? = null
+    },
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 )
+
+interface UserGlobalSettingsProvider {
+    suspend fun getUserSettings(userId: Uuid): UserSettingsDto?
+}
 
 interface PluginSettings {
     suspend fun getString(key: String): String?

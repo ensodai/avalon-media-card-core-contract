@@ -8,6 +8,10 @@ data class TmdbMovieDto(
     val id: Int,
     val title: String? = null,
     val name: String? = null,
+    @SerialName("original_title")
+    val originalTitle: String? = null,
+    @SerialName("original_name")
+    val originalName: String? = null,
     @SerialName("poster_path")
     val posterPath: String? = null,
     @SerialName("backdrop_path")
@@ -17,7 +21,14 @@ data class TmdbMovieDto(
     @SerialName("vote_average")
     val voteAverage: Double? = null,
     val overview: String? = null
-)
+) {
+    fun displayTitle(titleMode: TitleDisplayMode = TitleDisplayMode.LOCALIZED): String {
+        return when (titleMode) {
+            TitleDisplayMode.ORIGINAL -> originalTitle ?: originalName ?: title ?: name ?: ""
+            TitleDisplayMode.LOCALIZED -> title ?: name ?: originalTitle ?: originalName ?: ""
+        }
+    }
+}
 
 @Serializable
 data class TmdbMultiSearchDto(
@@ -26,6 +37,10 @@ data class TmdbMultiSearchDto(
     val mediaType: String, // "movie", "tv", "person"
     val title: String? = null,
     val name: String? = null,
+    @SerialName("original_title")
+    val originalTitle: String? = null,
+    @SerialName("original_name")
+    val originalName: String? = null,
     @SerialName("poster_path")
     val posterPath: String? = null,
     @SerialName("backdrop_path")
@@ -37,4 +52,11 @@ data class TmdbMultiSearchDto(
     @SerialName("vote_average")
     val voteAverage: Double? = null,
     val overview: String? = null
-)
+) {
+    fun displayTitle(titleMode: TitleDisplayMode = TitleDisplayMode.LOCALIZED): String {
+        return when (titleMode) {
+            TitleDisplayMode.ORIGINAL -> originalTitle ?: originalName ?: title ?: name ?: ""
+            TitleDisplayMode.LOCALIZED -> title ?: name ?: originalTitle ?: originalName ?: ""
+        }
+    }
+}
