@@ -210,6 +210,7 @@ interface IntegrationSettingsManager {
     suspend fun getTorrServerUseGst(userId: Uuid?): Boolean = false
     suspend fun getProwlarrSettings(userId: Uuid?): ResolvedSearchEngineSetting? = null
     suspend fun getJackettSettings(userId: Uuid?): ResolvedSearchEngineSetting? = null
+    suspend fun hasTraktAuth(userId: Uuid?): Boolean = false
 }
 
 interface UserFeedCacheProvider {
