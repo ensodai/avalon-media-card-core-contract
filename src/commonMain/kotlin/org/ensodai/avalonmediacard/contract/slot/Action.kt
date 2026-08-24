@@ -128,3 +128,46 @@ data class UploadCustomTorrentCommand(
     val fileName: String,
     val fileBytes: ByteArray
 ) : ServerAction
+
+@Serializable
+data class ToggleCollectionCommand(
+    val key: MediaKey,
+    val inCollection: Boolean
+) : ServerAction
+
+@Serializable
+data class SetRatingCommand(
+    val key: MediaKey,
+    val rating: Int
+) : ServerAction
+
+@Serializable
+data class SetStatusCommand(
+    val key: MediaKey,
+    val status: org.ensodai.avalonmediacard.contract.model.MediaStatus
+) : ServerAction
+
+@Serializable
+data class ToggleCustomListCommand(
+    val key: MediaKey,
+    val listId: String
+) : ServerAction
+
+@Serializable
+data class CreateCustomListCommand(
+    val key: MediaKey,
+    val listName: String
+) : ServerAction
+
+@Serializable
+data class MarkSeasonWatchedCommand(
+    val key: MediaKey,
+    val seasonNumber: Int,
+    val isWatched: Boolean
+) : ServerAction
+
+@Serializable
+data class SelectSeasonCommand(
+    val key: MediaKey,
+    val seasonNumber: Int
+) : ServerAction
