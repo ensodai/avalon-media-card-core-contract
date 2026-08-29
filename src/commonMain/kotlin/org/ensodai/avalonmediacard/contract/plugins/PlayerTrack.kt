@@ -8,7 +8,8 @@ data class AudioTrack(
     val name: String,
     val language: String? = null,
     val channels: Int? = null,
-    val isDefault: Boolean = false
+    val isDefault: Boolean = false,
+    val url: String? = null
 )
 
 @Serializable

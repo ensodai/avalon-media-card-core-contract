@@ -31,6 +31,11 @@ interface SourceMappingProvider {
     suspend fun getMappingsByMediaId(mediaId: String): List<SourceMapping>
 
     /**
+     * Получить все маппинги для конкретного mediaId и sourceId
+     */
+    suspend fun getMappings(mediaId: String, sourceId: String): List<SourceMapping>
+
+    /**
      * Сохранить новый маппинг или обновить существующий (upsert)
      */
     suspend fun saveMapping(mapping: SourceMapping): SourceMapping

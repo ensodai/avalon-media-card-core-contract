@@ -1,6 +1,7 @@
 package org.ensodai.avalonmediacard.contract.model
 
 import kotlinx.serialization.Serializable
+import org.ensodai.avalonmediacard.contract.classification.AnimeSubType
 
 @Serializable
 data class ActorMetadata(
@@ -89,8 +90,13 @@ data class MediaMetadata(
 
     // Localized variants for user customization
     val localizedPosters: Map<String, String> = emptyMap(),
-    val localizedOverviews: Map<String, String> = emptyMap()
-)
+    val localizedOverviews: Map<String, String> = emptyMap(),
+
+    // Anime Classification
+    val animeSubType: AnimeSubType = AnimeSubType.NOT_ANIME
+) {
+    val isAnime: Boolean get() = animeSubType != AnimeSubType.NOT_ANIME
+}
 
 fun MediaMetadata.withUserSettings(settings: UserSettingsDto?): MediaMetadata {
     if (settings == null) return this

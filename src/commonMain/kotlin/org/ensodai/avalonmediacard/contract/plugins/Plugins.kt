@@ -247,6 +247,7 @@ class PluginContext(
     val sourceMappings: SourceMappingProvider = object : SourceMappingProvider {
         override suspend fun getMappingsBySourceId(sourceId: String): List<SourceMapping> = emptyList()
         override suspend fun getMappingsByMediaId(mediaId: String): List<SourceMapping> = emptyList()
+        override suspend fun getMappings(mediaId: String, sourceId: String): List<SourceMapping> = emptyList()
         override suspend fun saveMapping(mapping: SourceMapping): SourceMapping = mapping
         override suspend fun saveMappingsBatch(mappings: List<SourceMapping>) {}
         override suspend fun clearMappingsByMediaId(mediaId: String) {}
