@@ -7,7 +7,7 @@ import kotlin.uuid.Uuid
 @Serializable
 sealed class AuthState {
     @Serializable
-    object Guest : AuthState()
+    data object Guest : AuthState()
 
     @Serializable
     data class Authorized(

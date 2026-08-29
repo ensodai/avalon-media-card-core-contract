@@ -53,6 +53,13 @@ object HlsPlaylistParser {
         }
     }
 
+    private val RES_REGEX = Regex("""RESOLUTION=(\d+x\d+)""")
+    private val BW_REGEX = Regex("""BANDWIDTH=(\d+)""")
+    private val NAME_REGEX = Regex("""NAME="([^"]+)"""")
+    private val LANG_REGEX = Regex("""LANGUAGE="([^"]+)"""")
+    private val GROUP_REGEX = Regex("""GROUP-ID="([^"]+)"""")
+    private val URI_REGEX = Regex("""URI="([^"]+)"""")
+
     /**
      * Parses the string content of a master M3U8 playlist.
      */
@@ -73,7 +80,7 @@ object HlsPlaylistParser {
 
             // 1. Video Quality streams
             if (line.startsWith("#EXT-X-STREAM-INF")) {
-                val resMatch = Regex("""RESOLUTION=(\d+x\d+)""").find(line)
+                val resMatch = RES_REGEX.find(line)
                 currentResolution = resMatch?.groupValues?.get(1)?.let { res ->
                     val height = res.substringAfter("x").toIntOrNull()
                     when {
@@ -83,7 +90,7 @@ object HlsPlaylistParser {
                         else -> res
                     }
                 } ?: run {
-                    val bwMatch = Regex("""BANDWIDTH=(\d+)""").find(line)
+                    val bwMatch = BW_REGEX.find(line)
                     val bw = bwMatch?.groupValues?.get(1)?.toLongOrNull()
                     when {
                         bw != null && bw > 15_000_000 -> "4K (2160p)"
@@ -106,11 +113,11 @@ object HlsPlaylistParser {
 
             // 2. Audio tracks in master playlist (#EXT-X-MEDIA:TYPE=AUDIO...)
             if (line.startsWith("#EXT-X-MEDIA:") && line.contains("TYPE=AUDIO")) {
-                val nameMatch = Regex("""NAME="([^"]+)"""").find(line)
-                val langMatch = Regex("""LANGUAGE="([^"]+)"""").find(line)
-                val groupMatch = Regex("""GROUP-ID="([^"]+)"""").find(line)
+                val nameMatch = NAME_REGEX.find(line)
+                val langMatch = LANG_REGEX.find(line)
+                val groupMatch = GROUP_REGEX.find(line)
                 val isDefault = line.contains("DEFAULT=YES")
-                val uriMatch = Regex("""URI="([^"]+)"""").find(line)
+                val uriMatch = URI_REGEX.find(line)
 
                 val name = nameMatch?.groupValues?.get(1) ?: langMatch?.groupValues?.get(1) ?: "Аудио"
                 val uri = uriMatch?.groupValues?.get(1)?.let { resolveRelativeUrl(baseUrl, it) }
@@ -129,9 +136,9 @@ object HlsPlaylistParser {
 
             // 3. Subtitle tracks in master playlist (#EXT-X-MEDIA:TYPE=SUBTITLES...)
             if (line.startsWith("#EXT-X-MEDIA:") && line.contains("TYPE=SUBTITLES")) {
-                val nameMatch = Regex("""NAME="([^"]+)"""").find(line)
-                val langMatch = Regex("""LANGUAGE="([^"]+)"""").find(line)
-                val uriMatch = Regex("""URI="([^"]+)"""").find(line)
+                val nameMatch = NAME_REGEX.find(line)
+                val langMatch = LANG_REGEX.find(line)
+                val uriMatch = URI_REGEX.find(line)
 
                 val name = nameMatch?.groupValues?.get(1) ?: langMatch?.groupValues?.get(1) ?: "Субтитры"
                 val uri = uriMatch?.groupValues?.get(1)?.let { resolveRelativeUrl(baseUrl, it) }

@@ -10,7 +10,10 @@ data class CreateUserRequest(
     val passwordRaw: String,
     val role: UserRole = UserRole.USER,
     val status: UserStatus = UserStatus.ACTIVE
-)
+) {
+    override fun toString(): String =
+        "CreateUserRequest(username='$username', passwordRaw='***', role=$role, status=$status)"
+}
 
 @Serializable
 data class AdminActionResponse(
@@ -41,7 +44,10 @@ data class GlobalIntegrationSettingsDto(
     val jackettUrl: String? = null,
     val jackettApiKey: String? = null,
     val jackettShareWithUsers: Boolean = false
-)
+) {
+    override fun toString(): String =
+        "GlobalIntegrationSettingsDto(tmdbReadToken=${if (tmdbReadToken != null) "***" else null}, tmdbShareWithUsers=$tmdbShareWithUsers, torrServerHost=$torrServerHost, torrServerLogin=$torrServerLogin, torrServerPassword=${if (torrServerPassword != null) "***" else null}, torrServerShareWithUsers=$torrServerShareWithUsers, torrServerUseGst=$torrServerUseGst, prowlarrUrl=$prowlarrUrl, prowlarrApiKey=${if (prowlarrApiKey != null) "***" else null}, prowlarrShareWithUsers=$prowlarrShareWithUsers, jackettUrl=$jackettUrl, jackettApiKey=${if (jackettApiKey != null) "***" else null}, jackettShareWithUsers=$jackettShareWithUsers)"
+}
 
 @Serializable
 data class UpdateGlobalIntegrationSettingsRequest(
@@ -58,7 +64,10 @@ data class UpdateGlobalIntegrationSettingsRequest(
     val jackettUrl: String? = null,
     val jackettApiKey: String? = null,
     val jackettShareWithUsers: Boolean? = null
-)
+) {
+    override fun toString(): String =
+        "UpdateGlobalIntegrationSettingsRequest(tmdbReadToken=${if (tmdbReadToken != null) "***" else null}, tmdbShareWithUsers=$tmdbShareWithUsers, torrServerHost=$torrServerHost, torrServerLogin=$torrServerLogin, torrServerPassword=${if (torrServerPassword != null) "***" else null}, torrServerShareWithUsers=$torrServerShareWithUsers, torrServerUseGst=$torrServerUseGst, prowlarrUrl=$prowlarrUrl, prowlarrApiKey=${if (prowlarrApiKey != null) "***" else null}, prowlarrShareWithUsers=$prowlarrShareWithUsers, jackettUrl=$jackettUrl, jackettApiKey=${if (jackettApiKey != null) "***" else null}, jackettShareWithUsers=$jackettShareWithUsers)"
+}
 
 @Serializable
 data class ServerSystemInfoDto(

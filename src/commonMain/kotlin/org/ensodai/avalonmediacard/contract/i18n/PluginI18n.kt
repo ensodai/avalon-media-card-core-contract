@@ -72,27 +72,24 @@ class MapPluginI18n(
         }
     }
 
+    companion object {
+        private val PLACEHOLDER_REGEX = Regex("""\{(\d+)\}|%(\d+)\$[sd]|%[sd]""")
+    }
+
     private fun formatString(pattern: String, args: Array<out Any>): String {
-        var result = pattern
-        // Replace positional placeholders {0}, {1}, etc.
-        for (i in args.indices) {
-            result = result.replace("{$i}", args[i].toString())
-        }
-        // Replace %1$s, %2$s, %1$d, etc.
-        for (i in args.indices) {
-            val num = i + 1
-            result = result.replace("%$num\$s", args[i].toString())
-            result = result.replace("%$num\$d", args[i].toString())
-        }
-        // Replace sequential %s / %d
-        for (arg in args) {
-            if (result.contains("%s")) {
-                result = result.replaceFirst("%s", arg.toString())
-            } else if (result.contains("%d")) {
-                result = result.replaceFirst("%d", arg.toString())
+        var sequentialIndex = 0
+        return PLACEHOLDER_REGEX.replace(pattern) { match ->
+            val positional = match.groups[1]?.value?.toIntOrNull()
+            val numbered = match.groups[2]?.value?.toIntOrNull()
+            when {
+                positional != null -> args.getOrNull(positional)?.toString() ?: match.value
+                numbered != null -> args.getOrNull(numbered - 1)?.toString() ?: match.value
+                else -> {
+                    val idx = sequentialIndex++
+                    args.getOrNull(idx)?.toString() ?: match.value
+                }
             }
         }
-        return result
     }
 }
 

@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+@Serializable
 enum class ClickstreamEventType {
     CLICK,
     DWELL,
@@ -14,6 +15,7 @@ enum class ClickstreamEventType {
     SCROLL
 }
 
+@Serializable
 enum class ClickstreamTargetType {
     MEDIA_MOVIE,
     MEDIA_TV,
@@ -22,6 +24,7 @@ enum class ClickstreamTargetType {
     UI_ELEMENT
 }
 
+@Serializable
 enum class ClickstreamContext {
     HERO_BANNER,
     CAROUSEL_CONTINUE,
