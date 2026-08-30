@@ -54,3 +54,7 @@ Thumbs.db
 *.zip
 *.tar.gz
 *.rar
+
+# Env & Repomix
+.env
+repomix-output*
