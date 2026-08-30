@@ -1,7 +1,8 @@
 package org.ensodai.avalonmediacard.contract.slot
 
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
@@ -10,6 +11,7 @@ import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
 import kotlin.uuid.Uuid
 
+@Polymorphic
 interface Action
 
 // --- Local Actions (Сайд-эффекты на клиенте) ---
@@ -51,6 +53,7 @@ data class ActionOpenSources(val key: MediaKey) : LocalAction
 
 // --- Server Actions (RPC команды на сервер) ---
 // Открытый интерфейс для полиморфизма (плагины будут добавлять свои экшены)
+@Polymorphic
 interface ServerAction : Action
 
 interface TemplateAction : ServerAction {

@@ -32,6 +32,8 @@ object GarbageCollector {
     private val CLEAN_SPACES_REGEX = Regex("""[\._\s]+""")
     private val CLEAN_HYPHENS_REGEX = Regex("""\s*-\s*""")
 
+    private val MULTI_SPACE_REGEX = Regex("""\s+""")
+
     fun cleanBasic(filename: String): String {
         var name = EXTENSION_REGEX.replace(filename, "")
         name = YEAR_RANGE_REGEX.replace(name, " ")
@@ -41,7 +43,7 @@ object GarbageCollector {
         name = name.replace('[', ' ').replace(']', ' ')
             .replace('{', ' ').replace('}', ' ')
             .replace('«', ' ').replace('»', ' ')
-        return name.replace(Regex("""\s+"""), " ").trim()
+        return MULTI_SPACE_REGEX.replace(name, " ").trim()
     }
 
     fun cleanHeavy(filename: String): String {
@@ -453,6 +455,8 @@ class FallbackProvider : EpisodeRegexProvider {
     private val ANIME_RANGE_REGEX = Regex("""(?<!\d)(\d{1,4})\s*[-_~]\s*(\d{1,4})(?!\d)""")
     private val ANIME_SINGLE_REGEX = Regex("""\s+-\s+(\d{1,4})(?!\d)""")
     private val NUMERIC_3_4_REGEX = Regex("""(?<!\d)(\d{1,2})(\d{2})(?!\d)""")
+    private val LEADING_EP_REGEX = Regex("""^(?:\[[^\]]+\]\s*)?(\d{1,3})\b""")
+    private val ALL_NUMBERS_REGEX = Regex("""\b\d{1,4}\b""")
 
     override fun match(filename: String): MappingResult {
         val heavyCleaned = GarbageCollector.cleanHeavy(filename)
@@ -474,7 +478,7 @@ class FallbackProvider : EpisodeRegexProvider {
             )
         }
 
-        val leadingEp = Regex("""^(?:\[[^\]]+\]\s*)?(\d{1,3})\b""").find(heavyCleaned)
+        val leadingEp = LEADING_EP_REGEX.find(heavyCleaned)
         if (leadingEp != null) {
             val ep = leadingEp.groupValues[1].toInt()
             if (ep in 1..1500) {
@@ -490,7 +494,7 @@ class FallbackProvider : EpisodeRegexProvider {
             }
         }
 
-        val allNumbers = Regex("""\b\d{1,4}\b""").findAll(heavyCleaned).map { it.value.toInt() }.toList()
+        val allNumbers = ALL_NUMBERS_REGEX.findAll(heavyCleaned).map { it.value.toInt() }.toList()
         if (allNumbers.isNotEmpty()) {
             val lastNum = allNumbers.last()
             if (lastNum < 1500) {
@@ -503,6 +507,23 @@ class FallbackProvider : EpisodeRegexProvider {
 }
 
 class EpisodeMatcher {
+    companion object {
+        private val SPECIALS_REGEX = Regex("""(?i)\b(?:specials?|extras?|s00|сезон\s*0)\b""")
+        private val S_RANGE_REGEX = Regex("""(?i)\bS(\d{1,2})\s*[-_~]\s*S?(\d{1,2})\b""")
+        private val ROOT_SEASON_RANGE_REGEX = Regex("""(?U)\b(?:[Ss]easons?|[Сс]езоны?)\s*(\d{1,2})\s*[-_~]\s*(\d{1,2})\b""", RegexOption.IGNORE_CASE)
+        private val CYR_PRE_RANGE_REGEX = Regex("""(?U)\b(\d{1,2})\s*[-_~]\s*(\d{1,2})\s*(?:[Ss]easons?|[Сс]езоны?|[Сс]езона?)\b""", RegexOption.IGNORE_CASE)
+        private val SINGLE_S_REGEX = Regex("""(?i)(?<!\w)S(\d{1,2})(?!\d|\w)""")
+        private val ROOT_SINGLE_SEASON_REGEX = Regex("""(?U)\b(?:[Ss]eason|[Сс]езон)\s*(\d{1,2})\b""")
+        private val PRE_SINGLE_SEASON_REGEX = Regex("""(?U)\b(\d{1,2})\s*(?:[Ss]eason|[Сс]езон)\b""", RegexOption.IGNORE_CASE)
+        private val MINISERIES_REGEX = Regex("""(?i)\b(?:miniseries|mini-series)\b""")
+        private val COMPLETE_SERIES_REGEX = Regex("""(?i)\b(?:complete\s*series|complete)\b""")
+        private val HAS_SEASONS_REGEX = Regex("""(?i)\b(?:seasons?|сезоны?)\b""")
+        private val HAS_S_REGEX = Regex("""(?i)\bS\d+\b""")
+        private val LONG_RUNNING_ANIME_REGEX = Regex("""(?i)\b(?:naruto|bleach|one\s*piece|dragon\s*ball|gintama|detective\s*conan|attack\s*on\s*titan)\b""")
+        private val DISC_OR_PART_REGEX = Regex("""(?i)\b(?:disc|disk|cd|part|часть|диск)\b""")
+        private val TRAIL_NUM_REGEX = Regex("""(?<!\d)(\d{1,2})\s*(?:\([12]\d{3}\))?\s*$""")
+    }
+
     private val providers = listOf(
         EnglishProvider(),
         RussianProvider(),
@@ -517,52 +538,49 @@ class EpisodeMatcher {
             }
         }
 
-        if (Regex("""(?i)\b(?:specials?|extras?|s00|сезон\s*0)\b""").containsMatchIn(text)) {
+        if (SPECIALS_REGEX.containsMatchIn(text)) {
             return listOf(0)
         }
 
-        val sRange = Regex("""(?i)\bS(\d{1,2})\s*[-_~]\s*S?(\d{1,2})\b""").find(text)
+        val sRange = S_RANGE_REGEX.find(text)
         if (sRange != null) {
             return ParserUtils.parseRange(sRange.groupValues[1], sRange.groupValues[2])
         }
 
-        val rootSeasonRange = Regex("""(?U)\b(?:[Ss]easons?|[Сс]езоны?)\s*(\d{1,2})\s*[-_~]\s*(\d{1,2})\b""", RegexOption.IGNORE_CASE)
-        rootSeasonRange.find(text)?.let { match ->
+        ROOT_SEASON_RANGE_REGEX.find(text)?.let { match ->
             return ParserUtils.parseRange(match.groupValues[1], match.groupValues[2])
         }
 
-        val cyrPreRange = Regex("""(?U)\b(\d{1,2})\s*[-_~]\s*(\d{1,2})\s*(?:[Ss]easons?|[Сс]езоны?|[Сс]езона?)\b""", RegexOption.IGNORE_CASE)
-        cyrPreRange.find(text)?.let { match ->
+        CYR_PRE_RANGE_REGEX.find(text)?.let { match ->
             return ParserUtils.parseRange(match.groupValues[1], match.groupValues[2])
         }
 
-        val singleS = Regex("""(?i)(?<!\w)S(\d{1,2})(?!\d|\w)""").find(text)
+        val singleS = SINGLE_S_REGEX.find(text)
         if (singleS != null) {
             return listOf(singleS.groupValues[1].toInt())
         }
 
-        val rootSingleSeason = Regex("""(?U)\b(?:[Ss]eason|[Сс]езон)\s*(\d{1,2})\b""").find(text)
+        val rootSingleSeason = ROOT_SINGLE_SEASON_REGEX.find(text)
         if (rootSingleSeason != null) {
             return listOf(rootSingleSeason.groupValues[1].toInt())
         }
 
-        val preSingleSeason = Regex("""(?U)\b(\d{1,2})\s*(?:[Ss]eason|[Сс]езон)\b""", RegexOption.IGNORE_CASE)
-        preSingleSeason.find(text)?.let { match ->
+        PRE_SINGLE_SEASON_REGEX.find(text)?.let { match ->
             return listOf(match.groupValues[1].toInt())
         }
 
-        if (Regex("""(?i)\b(?:miniseries|mini-series)\b""").containsMatchIn(text) ||
-            (Regex("""(?i)\b(?:complete\s*series|complete)\b""").containsMatchIn(text) &&
-             !Regex("""(?i)\b(?:seasons?|сезоны?)\b""").containsMatchIn(text) &&
-             !Regex("""(?i)\bS\d+\b""").containsMatchIn(text) &&
-             !Regex("""(?i)\b(?:naruto|bleach|one\s*piece|dragon\s*ball|gintama|detective\s*conan|attack\s*on\s*titan)\b""").containsMatchIn(text))
+        if (MINISERIES_REGEX.containsMatchIn(text) ||
+            (COMPLETE_SERIES_REGEX.containsMatchIn(text) &&
+             !HAS_SEASONS_REGEX.containsMatchIn(text) &&
+             !HAS_S_REGEX.containsMatchIn(text) &&
+             !LONG_RUNNING_ANIME_REGEX.containsMatchIn(text))
         ) {
             return listOf(1)
         }
 
-        val isDiscOrPart = Regex("""(?i)\b(?:disc|disk|cd|part|часть|диск)\b""").containsMatchIn(text)
+        val isDiscOrPart = DISC_OR_PART_REGEX.containsMatchIn(text)
         if (!isDiscOrPart) {
-            val trailNum = Regex("""(?<!\d)(\d{1,2})\s*(?:\([12]\d{3}\))?\s*$""").find(text)
+            val trailNum = TRAIL_NUM_REGEX.find(text)
             if (trailNum != null) {
                 val n = trailNum.groupValues[1].toInt()
                 if (n in 1..50) {

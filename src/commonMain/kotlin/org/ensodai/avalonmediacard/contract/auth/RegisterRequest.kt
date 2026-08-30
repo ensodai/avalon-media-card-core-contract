@@ -6,4 +6,6 @@ import kotlinx.serialization.Serializable
 data class RegisterRequest(
     val username: String,
     val password: String
-)
+) {
+    override fun toString(): String = "RegisterRequest(username='$username', password='***')"
+}
