@@ -1,7 +1,8 @@
 plugins {
-    kotlin("multiplatform") version "2.3.21"
-    kotlin("plugin.serialization") version "2.3.21"
-    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.2"
+    kotlin("multiplatform") version "2.4.10"
+    kotlin("plugin.serialization") version "2.4.10"
+    id("com.android.kotlin.multiplatform.library") version "9.1.1"
+    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.3"
     `maven-publish`
 }
 
@@ -11,8 +12,17 @@ version = "1.0.0-SNAPSHOT"
 kotlin {
     jvmToolchain(21)
 
+    android {
+        namespace = "org.ensodai.avalonmediacard.contract"
+        compileSdk = 37
+        minSdk = 26
+    }
+
     jvm()
     
+    iosArm64()
+    iosSimulatorArm64()
+
     js {
         browser()
     }
@@ -41,6 +51,19 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+            }
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ensodai/avalon-media-card-core-contract")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR") ?: "ensodai"
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
