@@ -2,12 +2,21 @@ package org.ensodai.avalonmediacard.contract.i18n
 
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
+import kotlin.uuid.Uuid
 
 /**
  * CoroutineContext element storing the active client/user locale code (e.g. "ru", "en", "de").
  */
 class PluginLocaleElement(val locale: String) : CoroutineContext.Element {
     companion object Key : CoroutineContext.Key<PluginLocaleElement>
+    override val key: CoroutineContext.Key<*> = Key
+}
+
+/**
+ * CoroutineContext element storing the active user ID.
+ */
+class PluginUserElement(val userId: Uuid) : CoroutineContext.Element {
+    companion object Key : CoroutineContext.Key<PluginUserElement>
     override val key: CoroutineContext.Key<*> = Key
 }
 

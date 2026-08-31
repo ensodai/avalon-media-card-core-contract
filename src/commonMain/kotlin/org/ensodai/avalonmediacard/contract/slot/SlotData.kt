@@ -83,6 +83,16 @@ sealed interface SlotData {
         val telemetryContext: ClickstreamContext? = null
     ) : SlotData
 
+    @Serializable
+    data class Banner(
+        val id: String,
+        val title: String,
+        val description: String,
+        val iconName: String? = null,
+        val primaryAction: Action? = null,
+        val primaryActionLabel: String? = null
+    ) : SlotData
+
     @Serializable 
     data class Comments(
         val title: String, 

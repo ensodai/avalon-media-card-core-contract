@@ -29,5 +29,6 @@ enum class SlotId {
     SearchResults,
     HeroBanner,
     CarouselBackdrops,
-    Exploration
+    Exploration,
+    Banner
 }

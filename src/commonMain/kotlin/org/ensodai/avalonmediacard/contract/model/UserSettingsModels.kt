@@ -14,7 +14,8 @@ data class UserSettingsDto(
     val posterLanguage: String? = null,
     val titleMode: TitleDisplayMode = TitleDisplayMode.LOCALIZED,
     val titleLanguage: String? = null,
-    val overviewLanguage: String? = null
+    val overviewLanguage: String? = null,
+    val tmdbReadToken: String? = null
 )
 
 fun UserSettingsDto?.resolveTargetLanguage(): String {
