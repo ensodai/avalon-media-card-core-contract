@@ -70,6 +70,47 @@ data class UpdateGlobalIntegrationSettingsRequest(
 }
 
 @Serializable
+data class UpdateTmdbSettingsRequest(
+    val token: String?,
+    val shareWithUsers: Boolean = true
+) {
+    override fun toString(): String =
+        "UpdateTmdbSettingsRequest(token=${if (token != null) "***" else null}, shareWithUsers=$shareWithUsers)"
+}
+
+@Serializable
+data class UpdateTorrServerSettingsRequest(
+    val host: String?,
+    val login: String?,
+    val password: String?,
+    val shareWithUsers: Boolean = false,
+    val useGst: Boolean = false
+) {
+    override fun toString(): String =
+        "UpdateTorrServerSettingsRequest(host=$host, login=$login, password=${if (password != null) "***" else null}, shareWithUsers=$shareWithUsers, useGst=$useGst)"
+}
+
+@Serializable
+data class UpdateProwlarrSettingsRequest(
+    val url: String?,
+    val apiKey: String?,
+    val shareWithUsers: Boolean = false
+) {
+    override fun toString(): String =
+        "UpdateProwlarrSettingsRequest(url=$url, apiKey=${if (apiKey != null) "***" else null}, shareWithUsers=$shareWithUsers)"
+}
+
+@Serializable
+data class UpdateJackettSettingsRequest(
+    val url: String?,
+    val apiKey: String?,
+    val shareWithUsers: Boolean = false
+) {
+    override fun toString(): String =
+        "UpdateJackettSettingsRequest(url=$url, apiKey=${if (apiKey != null) "***" else null}, shareWithUsers=$shareWithUsers)"
+}
+
+@Serializable
 data class ServerSystemInfoDto(
     val coreVersion: String,
     val protocolVersion: String,

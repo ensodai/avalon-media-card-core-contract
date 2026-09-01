@@ -6,6 +6,10 @@ import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UserDto
 import org.ensodai.avalonmediacard.contract.model.UserRole
 import org.ensodai.avalonmediacard.contract.model.UserStatus
@@ -22,6 +26,10 @@ interface AdminRpcService {
     
     suspend fun getGlobalIntegrationSettings(): GlobalIntegrationSettingsDto
     suspend fun updateGlobalIntegrationSettings(request: UpdateGlobalIntegrationSettingsRequest): AdminActionResponse
+    suspend fun updateTmdbSettings(request: UpdateTmdbSettingsRequest): AdminActionResponse
+    suspend fun updateTorrServerSettings(request: UpdateTorrServerSettingsRequest): AdminActionResponse
+    suspend fun updateProwlarrSettings(request: UpdateProwlarrSettingsRequest): AdminActionResponse
+    suspend fun updateJackettSettings(request: UpdateJackettSettingsRequest): AdminActionResponse
     suspend fun testTmdbConnection(token: String): AdminActionResponse
     suspend fun testTorrServerConnection(host: String, login: String?, password: String?): AdminActionResponse
     suspend fun testProwlarrConnection(url: String, apiKey: String): AdminActionResponse
