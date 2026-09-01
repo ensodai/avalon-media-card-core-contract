@@ -1,0 +1,82 @@
+name: Release Contract Library
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 1.0.2)'
+        required: true
+        default: '1.0.2'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
+
+jobs:
+  build-and-release:
+    name: Build Contract & Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle with Caching
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+
+      - name: Build Library Targets
+        run: ./gradlew assemble
+
+      - name: Collect Release Artifacts
+        run: |
+          mkdir -p dist
+          
+          # Копируем JAR / KLIB / AAR артефакты
+          find build/libs -type f \( -name "*.jar" -o -name "*.klib" \) -exec cp {} dist/ \;
+          find build/outputs/aar -type f -name "*.aar" -exec cp {} dist/ \; 2>/dev/null || true
+          
+          # Упаковываем все артефакты в один удобный архив для разработчиков
+          (cd dist && zip -r avalon-core-contract-bundle.zip . -x avalon-core-contract-bundle.zip)
+
+      - name: Determine Release Tag
+        id: release_info
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="v${{ github.event.inputs.version }}"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release_info.outputs.tag }}
+          name: "Core Contract ${{ steps.release_info.outputs.tag }}"
+          files: dist/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
