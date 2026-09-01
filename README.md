@@ -28,22 +28,12 @@
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        mavenLocal()
         maven { url = uri("https://jitpack.io") }
-        
-        // (Опционально) Если вы используете GitHub Packages:
-        // maven {
-        //     url = uri("https://maven.pkg.github.com/ensodai/avalon-media-card-core-contract")
-        //     credentials {
-        //         username = System.getenv("GITHUB_ACTOR") ?: "ensodai"
-        //         password = System.getenv("GITHUB_TOKEN")
-        //     }
-        // }
     }
 }
 ```
 
-> 💡 **Совет для монорепозитория**: Если контракт находится рядом на диске, в `settings.gradle.kts` можно просто добавить композитную сборку:
+> 💡 **Совет для локальной разработки**: Если контракт находится рядом на диске, в `settings.gradle.kts` можно просто подключить локальный проект через композитную сборку:
 > ```kotlin
 > if (file("../avalon-media-card-core-contract").exists()) {
 >     includeBuild("../avalon-media-card-core-contract")
@@ -59,10 +49,10 @@ dependencyResolutionManagement {
 В `gradle/libs.versions.toml`:
 ```toml
 [versions]
-avalon-core-contract = "1.0.0"
+avalon-core-contract = "v1.0.2"
 
 [libraries]
-avalon-core-contract = { module = "org.ensodai.avalonmediacard:avalon-media-card-core-contract", version.ref = "avalon-core-contract" }
+avalon-core-contract = { module = "com.github.ensodai:avalon-media-card-core-contract", version.ref = "avalon-core-contract" }
 ```
 
 В `build.gradle.kts` плагина:
@@ -78,7 +68,7 @@ dependencies {
 }
 ```
 
-#### Вариант B: Прямая зависимость
+#### Вариант B: Прямая зависимость через JitPack
 
 ```kotlin
 plugins {
@@ -87,7 +77,7 @@ plugins {
 }
 
 dependencies {
-    implementation("org.ensodai.avalonmediacard:avalon-media-card-core-contract:1.0.0")
+    implementation("com.github.ensodai:avalon-media-card-core-contract:v1.0.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 }
 
@@ -97,6 +87,9 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     }
 }
 ```
+
+#### Вариант C: Прямая загрузка JAR из GitHub Releases
+Вы также можете скачать готовые `.jar` и `.klib` артефакты прямо со страницы [GitHub Releases](https://github.com/ensodai/avalon-media-card-core-contract/releases).
 
 ---
 
@@ -109,26 +102,21 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 ```kotlin
 package com.example.myplugin
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.ensodai.avalonmediacard.contract.model.SidebarItem
 import org.ensodai.avalonmediacard.contract.plugins.AvalonPlugin
 import org.ensodai.avalonmediacard.contract.plugins.PluginContext
-import org.ensodai.avalonmediacard.contract.plugins.PluginManifest
 import org.ensodai.avalonmediacard.contract.slot.*
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 
 class MyCustomPlugin : AvalonPlugin {
 
-    override val manifest = PluginManifest(
-        id = "my-custom-plugin",
-        name = "My Custom Plugin",
-        version = "1.0.0",
-        author = "Developer",
-        description = "Пример кастомного плагина для Avalon Media Card"
-    )
+    override val id: String = "my-custom-plugin"
+    override val name: String = "My Custom Plugin"
+    override val version: String = "1.0.0"
+    override val author: String = "Developer"
 
-    override fun init(context: PluginContext) {
+    override fun onInitialize(context: PluginContext) {
         // 1. Декларация слотов и разметки для Главного экрана
         context.slots.declare<Screen.Dashboard>(
             slots = listOf(SlotId.Carousels),
@@ -161,7 +149,7 @@ class MyCustomPlugin : AvalonPlugin {
         }
 
         // 3. Добавление пункта в боковое меню (Sidebar)
-        context.sidebar.provide { userId ->
+        context.sidebars.provide { userId ->
             flow {
                 emit(
                     listOf(

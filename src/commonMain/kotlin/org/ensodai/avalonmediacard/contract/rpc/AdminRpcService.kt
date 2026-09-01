@@ -39,4 +39,5 @@ interface AdminRpcService {
     suspend fun clearDiscoverCache(): AdminActionResponse
     suspend fun clearFeedCache(): AdminActionResponse
     suspend fun clearMediaCache(): AdminActionResponse
+    suspend fun reloadPlugins(): AdminActionResponse
 }
