@@ -30,5 +30,6 @@ enum class SlotId {
     HeroBanner,
     CarouselBackdrops,
     Exploration,
-    Banner
+    Banner,
+    EpisodesFeed
 }

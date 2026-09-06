@@ -19,5 +19,7 @@ data class UserMovieItem(
     val lastWatchedAt: Instant,
     val lastSourceProviderId: String? = null,
     val lastSourceId: String? = null,
-    val lastSourcePayload: String? = null
+    val lastSourcePayload: String? = null,
+    val createdAt: Instant = Instant.DISTANT_PAST,
+    val updatedAt: Instant = Instant.DISTANT_PAST
 )

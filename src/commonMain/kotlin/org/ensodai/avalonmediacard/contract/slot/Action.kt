@@ -174,3 +174,6 @@ data class SelectSeasonCommand(
     val key: MediaKey,
     val seasonNumber: Int
 ) : ServerAction
+
+@Serializable
+data object MarkNotificationsReadCommand : ServerAction

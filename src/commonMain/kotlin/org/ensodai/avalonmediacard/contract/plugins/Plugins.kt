@@ -5,6 +5,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import org.ensodai.avalonmediacard.contract.i18n.EmptyPluginI18n
 import org.ensodai.avalonmediacard.contract.i18n.PluginI18n
@@ -14,6 +16,7 @@ import org.ensodai.avalonmediacard.contract.model.*
 import org.ensodai.avalonmediacard.contract.slot.*
 import org.ensodai.avalonmediacard.contract.ui.navigation.Screen
 import kotlin.reflect.KClass
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
 
 /**
@@ -317,8 +320,10 @@ class PluginContext(
     val userGlobalSettings: UserGlobalSettingsProvider = object : UserGlobalSettingsProvider {
         override suspend fun getUserSettings(userId: Uuid): UserSettingsDto? = null
     },
+    val episodeNotifications: UserEpisodeNotificationProvider = DummyUserEpisodeNotificationProvider,
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 )
+
 
 interface UserGlobalSettingsProvider {
     suspend fun getUserSettings(userId: Uuid): UserSettingsDto?

@@ -1,10 +1,11 @@
 package org.ensodai.avalonmediacard.contract.slot
 
 import kotlinx.serialization.Serializable
-import org.ensodai.avalonmediacard.contract.model.MediaKey
-import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.model.ClickstreamContext
+import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.MediaStatus
+import org.ensodai.avalonmediacard.contract.model.NotificationType
+import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 
 @Serializable
 data class GenreItem(
@@ -176,6 +177,14 @@ sealed interface SlotData {
         val torrentTitle: String,
         val files: List<TorrentFileItem>
     ) : SlotData
+
+    @Serializable
+    data class EpisodesFeed(
+        val sections: List<EpisodesSection> = emptyList(),
+        val rollups: List<MissedShowRollupItem> = emptyList(),
+        val totalUnreadCount: Int = 0,
+        val markAllReadAction: Action? = null
+    ) : SlotData
 }
 
 @Serializable
@@ -265,4 +274,45 @@ data class TorrentFileItem(
     val mappedEpisodes: List<Int>?,
     val fileIndex: Int? = null,
     val remapAction: Action? = null
+)
+
+@Serializable
+data class NewEpisodeCardItem(
+    val id: String,
+    val mediaKey: MediaKey,
+    val showTitle: String,
+    val showPosterUrl: String? = null,
+    val episodeTitle: String? = null,
+    val seasonNumber: Int? = null,
+    val episodeNumber: Int? = null,
+    val airDate: String? = null,
+    val durationMinutes: Int? = null,
+    val stillUrl: String? = null,
+    val overview: String? = null,
+    val isNew: Boolean = false,
+    val playAction: Action? = null,
+    val markWatchedAction: Action? = null,
+    val openDetailsAction: Action? = null,
+    val notificationType: NotificationType = NotificationType.EPISODE_RELEASE
+)
+
+@Serializable
+data class MissedShowRollupItem(
+    val mediaKey: MediaKey,
+    val showTitle: String,
+    val showPosterUrl: String? = null,
+    val missedEpisodesCount: Int,
+    val startSeason: Int,
+    val startEpisode: Int,
+    val endSeason: Int,
+    val endEpisode: Int,
+    val continueAction: Action? = null,
+    val openDetailsAction: Action? = null
+)
+
+@Serializable
+data class EpisodesSection(
+    val sectionId: String,
+    val title: String,
+    val episodes: List<NewEpisodeCardItem> = emptyList()
 )
