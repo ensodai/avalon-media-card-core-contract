@@ -13,15 +13,9 @@ data class EpisodeNotificationItemDto(
     val id: Uuid,
     val userId: Uuid,
     val mediaKey: MediaKey,
-    val showTitle: String,
-    val showPosterUrl: String? = null,
     val seasonNumber: Int? = null,
     val episodeNumber: Int? = null,
-    val episodeTitle: String? = null,
     val airDate: String? = null,
-    val stillUrl: String? = null,
-    val overview: String? = null,
-    val durationMinutes: Int? = null,
     val isRead: Boolean = false,
     val isDismissed: Boolean = false,
     val createdAt: Instant,
@@ -35,6 +29,18 @@ interface UserEpisodeNotificationProvider {
     suspend fun markAsRead(userId: Uuid, notificationId: Uuid)
     suspend fun dismiss(userId: Uuid, notificationId: Uuid)
     suspend fun syncNotifications(userId: Uuid)
+    suspend fun markWatched(
+        userId: Uuid,
+        catalogId: String,
+        externalId: String,
+        seasonNumber: Int,
+        episodeNumber: Int
+    )
+    suspend fun markMovieWatched(
+        userId: Uuid,
+        catalogId: String,
+        externalId: String
+    )
 }
 
 object DummyUserEpisodeNotificationProvider : UserEpisodeNotificationProvider {
@@ -44,4 +50,6 @@ object DummyUserEpisodeNotificationProvider : UserEpisodeNotificationProvider {
     override suspend fun markAsRead(userId: Uuid, notificationId: Uuid) {}
     override suspend fun dismiss(userId: Uuid, notificationId: Uuid) {}
     override suspend fun syncNotifications(userId: Uuid) {}
+    override suspend fun markWatched(userId: Uuid, catalogId: String, externalId: String, seasonNumber: Int, episodeNumber: Int) {}
+    override suspend fun markMovieWatched(userId: Uuid, catalogId: String, externalId: String) {}
 }
