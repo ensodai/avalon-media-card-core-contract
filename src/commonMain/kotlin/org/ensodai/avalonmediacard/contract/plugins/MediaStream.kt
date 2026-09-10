@@ -62,7 +62,9 @@ data class MediaStream(
     val qualityVariants: List<VideoQuality> = emptyList(),
     // Универсальный подчипс фильтрации (например: season_1, tracker_rutor, voice_lostfilm)
     val subFilterId: String? = null,
-    val subFilterLabel: String? = null
+    val subFilterLabel: String? = null,
+    // HTTP заголовки для безопасного воспроизведения потока (Hotlink/Referer/Origin/User-Agent/Auth)
+    val headers: Map<String, String> = emptyMap()
 ) {
     val canonicalId: String
         get() = when {
