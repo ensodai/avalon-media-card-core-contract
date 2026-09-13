@@ -183,6 +183,8 @@ sealed interface SlotData {
         val sections: List<EpisodesSection> = emptyList(),
         val rollups: List<MissedShowRollupItem> = emptyList(),
         val totalUnreadCount: Int = 0,
+        val recentUnreadCount: Int = 0,
+        val unwatchedCount: Int = 0,
         val markAllReadAction: Action? = null
     ) : SlotData
 }
