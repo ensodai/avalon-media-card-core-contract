@@ -160,7 +160,14 @@ data class ToggleCustomListCommand(
 data class CreateCustomListCommand(
     val key: MediaKey,
     val listName: String
-) : ServerAction
+) : TemplateAction {
+    override fun withParameter(key: String, value: Any): TemplateAction {
+        return when (key) {
+            "listName" -> copy(listName = value.toString())
+            else -> this
+        }
+    }
+}
 
 @Serializable
 data class MarkSeasonWatchedCommand(
