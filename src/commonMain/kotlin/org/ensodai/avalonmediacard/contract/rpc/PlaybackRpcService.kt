@@ -17,7 +17,9 @@ interface PlaybackRpcService {
     suspend fun getPlaybackMetadata(
         key: MediaKey,
         seasonNumber: Int? = null,
-        episodeNumber: Int? = null
+        episodeNumber: Int? = null,
+        sourceType: String? = null,
+        sourceId: String? = null
     ): PlaybackMetadataResult
 
     /**
@@ -26,7 +28,9 @@ interface PlaybackRpcService {
     suspend fun getStreamUrl(
         key: MediaKey,
         seasonNumber: Int? = null,
-        episodeNumber: Int? = null
+        episodeNumber: Int? = null,
+        sourceType: String? = null,
+        sourceId: String? = null
     ): StreamPlaybackResult
 
     suspend fun selectSource(
