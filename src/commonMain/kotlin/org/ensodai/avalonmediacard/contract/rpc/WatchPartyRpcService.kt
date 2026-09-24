@@ -4,7 +4,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.rpc.annotations.Rpc
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
+import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
+import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -33,6 +35,11 @@ interface WatchPartyRpcService {
     suspend fun getSavedRoomsForMedia(mediaId: String): List<WatchRoomSummaryDto>
 
     /**
+     * Возвращает список всех комнат пользователя (где он хост или участник).
+     */
+    suspend fun getUserRooms(): List<WatchRoomSummaryDto>
+
+    /**
      * Покинуть комнату.
      */
     suspend fun leaveRoom(roomId: Uuid): Boolean
@@ -41,6 +48,21 @@ interface WatchPartyRpcService {
      * Закрыть комнату (только для хоста).
      */
     suspend fun closeRoom(roomId: Uuid): Boolean
+
+    /**
+     * Реактивный поток событий предстартового лобби (мультиплексируется поверх единого WebSocket-канала).
+     */
+    fun streamLobbyState(roomId: Uuid): Flow<LobbyEvent>
+
+    /**
+     * Обновление готовности и намерения участника в лобби.
+     */
+    suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean
+
+    /**
+     * Команда хоста на запуск совместного просмотра из лобби.
+     */
+    suspend fun triggerStartPlayback(roomId: Uuid): Boolean
 
     /**
      * Реактивный поток событий комнаты в реальном времени (WebSocket).

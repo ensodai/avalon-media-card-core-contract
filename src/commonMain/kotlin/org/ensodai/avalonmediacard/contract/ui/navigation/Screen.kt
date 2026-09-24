@@ -35,6 +35,9 @@ sealed interface Screen {
     data object EpisodesNotifications : Screen
 
     @Serializable
+    data object WatchRooms : Screen
+
+    @Serializable
     data class Search(val initialQuery: String = "") : Screen
 
     @Serializable

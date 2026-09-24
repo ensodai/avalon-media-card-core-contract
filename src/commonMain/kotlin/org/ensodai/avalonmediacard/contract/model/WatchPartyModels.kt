@@ -159,3 +159,40 @@ sealed interface WatchRoomEvent {
         val message: String
     ) : WatchRoomEvent
 }
+
+@Serializable
+data class SetLobbyStatusRequest(
+    val isReady: Boolean,
+    val intent: WatchParticipantIntent
+)
+
+@Serializable
+sealed interface LobbyEvent {
+    @Serializable
+    data class InitialSnapshot(
+        val roomStatus: WatchRoomStatus,
+        val participants: List<WatchRoomParticipantDto>
+    ) : LobbyEvent
+
+    @Serializable
+    data class ParticipantUpdated(
+        val participant: WatchRoomParticipantDto
+    ) : LobbyEvent
+
+    @Serializable
+    data class ParticipantRemoved(
+        val userId: Uuid
+    ) : LobbyEvent
+
+    @Serializable
+    data class TransitionToPlayer(
+        val playAtServerTimestampMs: Long,
+        val season: Int?,
+        val episode: Int?
+    ) : LobbyEvent
+
+    @Serializable
+    data class SystemNotice(
+        val message: String
+    ) : LobbyEvent
+}
