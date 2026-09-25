@@ -2,6 +2,8 @@ package org.ensodai.avalonmediacard.contract.rpc
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.rpc.annotations.Rpc
+import org.ensodai.avalonmediacard.contract.model.ClockSyncPing
+import org.ensodai.avalonmediacard.contract.model.ClockSyncPong
 import org.ensodai.avalonmediacard.contract.model.CreateRoomRequest
 import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
@@ -78,4 +80,9 @@ interface WatchPartyRpcService {
      * Отправка быстрой эмодзи-реакции поверх экрана.
      */
     suspend fun sendReaction(roomId: Uuid, emoji: String): Boolean
+
+    /**
+     * SNTP синхронизация часов клиента и сервера.
+     */
+    suspend fun syncClock(ping: ClockSyncPing): ClockSyncPong
 }

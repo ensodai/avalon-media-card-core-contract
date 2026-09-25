@@ -1,7 +1,20 @@
 package org.ensodai.avalonmediacard.contract.model
 
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
 import kotlin.uuid.Uuid
+
+@Serializable
+data class ClockSyncPing(
+    val clientSendTime: Instant
+)
+
+@Serializable
+data class ClockSyncPong(
+    val clientSendTime: Instant,
+    val serverReceiveTime: Instant,
+    val serverTransmitTime: Instant
+)
 
 @Serializable
 enum class WatchRoomStatus {
@@ -127,6 +140,9 @@ sealed interface RoomPlaybackCommand {
     data class ReportBuffer(val isBuffering: Boolean, val bufferPercent: Int = 100) : RoomPlaybackCommand
 
     @Serializable
+    data class ReportMediaReady(val positionMs: Long = 0L) : RoomPlaybackCommand
+
+    @Serializable
     data class SetLobbyStatus(val intent: WatchParticipantIntent, val isReady: Boolean) : RoomPlaybackCommand
 }
 
@@ -136,7 +152,7 @@ sealed interface WatchRoomEvent {
     data class SyncState(
         val isPlaying: Boolean,
         val anchorPositionMs: Long,
-        val anchorServerTimestampMs: Long,
+        val anchorServerTime: Instant,
         val season: Int? = null,
         val episode: Int? = null,
         val triggeredByUserId: Uuid? = null
@@ -186,7 +202,7 @@ sealed interface LobbyEvent {
 
     @Serializable
     data class TransitionToPlayer(
-        val playAtServerTimestampMs: Long,
+        val playAtServerTime: Instant,
         val season: Int?,
         val episode: Int?
     ) : LobbyEvent
