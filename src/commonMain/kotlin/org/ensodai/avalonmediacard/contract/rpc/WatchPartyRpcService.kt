@@ -37,9 +37,20 @@ interface WatchPartyRpcService {
     suspend fun getSavedRoomsForMedia(mediaId: String): List<WatchRoomSummaryDto>
 
     /**
+     * Реактивный поток сохраненных активных комнат для конкретного тайтла в реальном времени (WebSocket).
+     */
+    fun streamSavedRoomsForMedia(mediaId: String): Flow<List<WatchRoomSummaryDto>>
+
+    /**
      * Возвращает список всех комнат пользователя (где он хост или участник).
      */
     suspend fun getUserRooms(): List<WatchRoomSummaryDto>
+
+    /**
+     * Реактивный поток актуального списка комнат пользователя в реальном времени (WebSocket).
+     * Передает обновленный список при любых изменениях онлайна, фазы или состава комнат.
+     */
+    fun streamUserRooms(): Flow<List<WatchRoomSummaryDto>>
 
     /**
      * Покинуть комнату.

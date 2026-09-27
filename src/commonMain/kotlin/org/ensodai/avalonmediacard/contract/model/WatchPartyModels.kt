@@ -24,6 +24,16 @@ enum class WatchRoomStatus {
 }
 
 @Serializable
+enum class WatchRoomPhase {
+    LOBBY,              // В лобби, предстартовая готовность
+    PREPARING,          // Подготовка медиапотока (буферизация перед стартом)
+    STARTING_SCHEDULED, // Запланирован синхронный пуск через таймер обратного отсчета
+    PLAYING_IN_SYNC,    // Синхронное воспроизведение
+    PARTIAL_BUFFERING,  // Пауза из-за буферизации кого-то из участников
+    FORCE_PAUSED        // Ручная пауза
+}
+
+@Serializable
 enum class WatchRoomControlMode {
     HOST_ONLY,
     DEMOCRATIC
@@ -62,7 +72,8 @@ data class WatchRoomParticipantDto(
     val isOnline: Boolean = true,
     val playbackState: WatchRoomPlaybackState = WatchRoomPlaybackState.READY,
     val isReady: Boolean = false,
-    val intent: WatchParticipantIntent = WatchParticipantIntent.WATCHING_ATTENTIVELY
+    val intent: WatchParticipantIntent = WatchParticipantIntent.WATCHING_ATTENTIVELY,
+    val avatarUrl: String? = null
 )
 
 @Serializable
@@ -81,8 +92,15 @@ data class WatchRoomDto(
     val controlMode: WatchRoomControlMode = WatchRoomControlMode.HOST_ONLY,
     val status: WatchRoomStatus = WatchRoomStatus.ACTIVE,
     val isPrivate: Boolean = false,
-    val participants: List<WatchRoomParticipantDto> = emptyList()
-)
+    val participants: List<WatchRoomParticipantDto> = emptyList(),
+    val phase: WatchRoomPhase = WatchRoomPhase.LOBBY
+) {
+    val isPlaying: Boolean
+        get() = phase == WatchRoomPhase.PLAYING_IN_SYNC || phase == WatchRoomPhase.STARTING_SCHEDULED
+
+    val onlineParticipantsCount: Int
+        get() = participants.count { it.isOnline }
+}
 
 @Serializable
 data class WatchRoomSummaryDto(
@@ -94,10 +112,22 @@ data class WatchRoomSummaryDto(
     val currentEpisode: Int? = null,
     val lastPositionSeconds: Long = 0L,
     val joinPin: String? = null,
-    val participantsCount: Int = 1,
     val isHost: Boolean = false,
-    val status: WatchRoomStatus = WatchRoomStatus.ACTIVE
-)
+    val status: WatchRoomStatus = WatchRoomStatus.ACTIVE,
+    val phase: WatchRoomPhase = WatchRoomPhase.LOBBY,
+    val participants: List<WatchRoomParticipantDto> = emptyList(),
+    val sourceType: String? = null,
+    val sourceId: String? = null
+) {
+    val isPlaying: Boolean
+        get() = phase == WatchRoomPhase.PLAYING_IN_SYNC || phase == WatchRoomPhase.STARTING_SCHEDULED
+
+    val participantsCount: Int
+        get() = participants.size
+
+    val onlineParticipantsCount: Int
+        get() = participants.count { it.isOnline }
+}
 
 @Serializable
 data class CreateRoomRequest(
@@ -144,6 +174,9 @@ sealed interface RoomPlaybackCommand {
 
     @Serializable
     data class SetLobbyStatus(val intent: WatchParticipantIntent, val isReady: Boolean) : RoomPlaybackCommand
+
+    @Serializable
+    data object ReturnToLobby : RoomPlaybackCommand
 }
 
 @Serializable
@@ -174,6 +207,9 @@ sealed interface WatchRoomEvent {
     data class SystemNotice(
         val message: String
     ) : WatchRoomEvent
+
+    @Serializable
+    data object ReturnedToLobby : WatchRoomEvent
 }
 
 @Serializable
@@ -204,7 +240,8 @@ sealed interface LobbyEvent {
     data class TransitionToPlayer(
         val playAtServerTime: Instant,
         val season: Int?,
-        val episode: Int?
+        val episode: Int?,
+        val startPositionSeconds: Long = 0L
     ) : LobbyEvent
 
     @Serializable
