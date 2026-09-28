@@ -138,6 +138,7 @@ data class CreateRoomRequest(
     val mediaId: String,
     val mediaType: MediaType,
     val title: String? = null,
+    val mediaTitle: String? = null,
     val season: Int? = null,
     val episode: Int? = null,
     val startPositionSeconds: Long = 0L,
@@ -223,11 +224,26 @@ data class SetLobbyStatusRequest(
 )
 
 @Serializable
+data class UpdateRoomSourceRequest(
+    val roomId: Uuid,
+    val sourceType: String,
+    val sourceId: String,
+    val sourceName: String? = null,
+    val season: Int? = null,
+    val episode: Int? = null
+)
+
+@Serializable
 sealed interface LobbyEvent {
     @Serializable
     data class InitialSnapshot(
         val roomStatus: WatchRoomStatus,
-        val participants: List<WatchRoomParticipantDto>
+        val participants: List<WatchRoomParticipantDto>,
+        val sourceType: String? = null,
+        val sourceId: String? = null,
+        val sourceName: String? = null,
+        val season: Int? = null,
+        val episode: Int? = null
     ) : LobbyEvent
 
     @Serializable
@@ -238,6 +254,15 @@ sealed interface LobbyEvent {
     @Serializable
     data class ParticipantRemoved(
         val userId: Uuid
+    ) : LobbyEvent
+
+    @Serializable
+    data class SourceUpdated(
+        val sourceType: String,
+        val sourceId: String,
+        val sourceName: String? = null,
+        val season: Int? = null,
+        val episode: Int? = null
     ) : LobbyEvent
 
     @Serializable

@@ -9,6 +9,7 @@ import org.ensodai.avalonmediacard.contract.model.JoinRoomResult
 import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
+import org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -71,6 +72,11 @@ interface WatchPartyRpcService {
      * Обновление готовности и намерения участника в лобби.
      */
     suspend fun setLobbyStatus(roomId: Uuid, request: SetLobbyStatusRequest): Boolean
+
+    /**
+     * Смена медиа-источника комнаты (только для хоста).
+     */
+    suspend fun updateRoomSource(request: UpdateRoomSourceRequest): Boolean
 
     /**
      * Команда хоста на запуск совместного просмотра из лобби.
