@@ -93,7 +93,9 @@ data class WatchRoomDto(
     val status: WatchRoomStatus = WatchRoomStatus.ACTIVE,
     val isPrivate: Boolean = false,
     val participants: List<WatchRoomParticipantDto> = emptyList(),
-    val phase: WatchRoomPhase = WatchRoomPhase.LOBBY
+    val phase: WatchRoomPhase = WatchRoomPhase.LOBBY,
+    val backdropUrl: String? = null,
+    val mediaTitle: String? = null
 ) {
     val isPlaying: Boolean
         get() = phase == WatchRoomPhase.PLAYING_IN_SYNC || phase == WatchRoomPhase.STARTING_SCHEDULED
@@ -117,7 +119,9 @@ data class WatchRoomSummaryDto(
     val phase: WatchRoomPhase = WatchRoomPhase.LOBBY,
     val participants: List<WatchRoomParticipantDto> = emptyList(),
     val sourceType: String? = null,
-    val sourceId: String? = null
+    val sourceId: String? = null,
+    val backdropUrl: String? = null,
+    val mediaTitle: String? = null
 ) {
     val isPlaying: Boolean
         get() = phase == WatchRoomPhase.PLAYING_IN_SYNC || phase == WatchRoomPhase.STARTING_SCHEDULED
