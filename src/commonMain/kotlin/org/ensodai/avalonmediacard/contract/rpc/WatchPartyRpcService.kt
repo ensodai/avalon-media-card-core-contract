@@ -10,6 +10,7 @@ import org.ensodai.avalonmediacard.contract.model.LobbyEvent
 import org.ensodai.avalonmediacard.contract.model.RoomPlaybackCommand
 import org.ensodai.avalonmediacard.contract.model.SetLobbyStatusRequest
 import org.ensodai.avalonmediacard.contract.model.UpdateRoomSourceRequest
+import org.ensodai.avalonmediacard.contract.model.WatchRoomChatMessageDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomDto
 import org.ensodai.avalonmediacard.contract.model.WatchRoomEvent
 import org.ensodai.avalonmediacard.contract.model.WatchRoomSummaryDto
@@ -97,6 +98,16 @@ interface WatchPartyRpcService {
      * Отправка быстрой эмодзи-реакции поверх экрана.
      */
     suspend fun sendReaction(roomId: Uuid, emoji: String): Boolean
+
+    /**
+     * Отправка текстового сообщения в чат совместного просмотра.
+     */
+    suspend fun sendChatMessage(roomId: Uuid, text: String, playbackPositionMs: Long): Boolean
+
+    /**
+     * Получение истории сообщений для конкретной серии.
+     */
+    suspend fun getRoomChatHistory(roomId: Uuid, season: Int?, episode: Int?): List<WatchRoomChatMessageDto>
 
     /**
      * SNTP синхронизация часов клиента и сервера.

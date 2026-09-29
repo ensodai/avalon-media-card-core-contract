@@ -209,6 +209,18 @@ sealed interface WatchRoomEvent {
     ) : WatchRoomEvent
 
     @Serializable
+    data class ChatMessageReceived(
+        val message: WatchRoomChatMessageDto
+    ) : WatchRoomEvent
+
+    @Serializable
+    data class ChatHistorySnapshot(
+        val season: Int?,
+        val episode: Int?,
+        val messages: List<WatchRoomChatMessageDto>
+    ) : WatchRoomEvent
+
+    @Serializable
     data class SystemNotice(
         val message: String
     ) : WatchRoomEvent
