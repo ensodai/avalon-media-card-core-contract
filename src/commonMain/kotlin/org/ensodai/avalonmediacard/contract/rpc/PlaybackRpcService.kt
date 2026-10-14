@@ -7,6 +7,7 @@ import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
 import org.ensodai.avalonmediacard.contract.plugins.SubtitleTrack
+import org.ensodai.avalonmediacard.contract.plugins.VideoQuality
 import org.ensodai.avalonmediacard.contract.slot.TorrentFileItem
 
 @Rpc
@@ -105,7 +106,8 @@ sealed interface StreamPlaybackResult {
         val subtitleTracks: List<SubtitleTrack> = emptyList(),
         val audioTrackIndex: Int? = null,
         val playlist: List<MediaStream> = emptyList(),
-        val sessionId: Uuid? = null
+        val sessionId: Uuid? = null,
+        val qualityVariants: List<VideoQuality> = emptyList()
     ) : StreamPlaybackResult
 
     @Serializable
