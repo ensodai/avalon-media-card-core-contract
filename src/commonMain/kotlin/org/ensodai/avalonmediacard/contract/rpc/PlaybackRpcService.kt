@@ -2,6 +2,7 @@ package org.ensodai.avalonmediacard.contract.rpc
 
 import kotlinx.rpc.annotations.Rpc
 import kotlinx.serialization.Serializable
+import kotlin.uuid.Uuid
 import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.plugins.AudioTrack
 import org.ensodai.avalonmediacard.contract.plugins.MediaStream
@@ -103,7 +104,8 @@ sealed interface StreamPlaybackResult {
         val audioTracks: List<AudioTrack> = emptyList(),
         val subtitleTracks: List<SubtitleTrack> = emptyList(),
         val audioTrackIndex: Int? = null,
-        val playlist: List<MediaStream> = emptyList()
+        val playlist: List<MediaStream> = emptyList(),
+        val sessionId: Uuid? = null
     ) : StreamPlaybackResult
 
     @Serializable
@@ -116,4 +118,3 @@ sealed interface StreamPlaybackResult {
         val message: String
     ) : StreamPlaybackResult
 }
-
