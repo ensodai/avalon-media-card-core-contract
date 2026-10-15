@@ -4,6 +4,17 @@ fun calculateTargetCursor(streams: List<MediaStream>): StreamCursor? {
     val mapped = streams.filter { it.isMapped }
     if (mapped.isEmpty()) return null
 
+    val isMovie = mapped.all { it.seasonNumber == null && it.episodeNumber == null }
+    if (isMovie) {
+        val stream = mapped.first()
+        return StreamCursor(
+            season = 0,
+            episode = 0,
+            progressSeconds = stream.watchedProgressSeconds,
+            episodeName = stream.episodeName
+        )
+    }
+
     val recent = mapped.filter { it.isWatched || it.watchedProgressSeconds != null }
         .maxWithOrNull(
             compareBy<MediaStream> { it.lastWatchedAtEpochMs ?: 0L }
@@ -49,6 +60,18 @@ fun resolveTargetStream(
     val mapped = mappedStreams.filter { it.isMapped }
     if (mapped.isEmpty()) {
         return mappedStreams.firstOrNull()?.let { it to null }
+    }
+
+    val isMovie = mapped.all { it.seasonNumber == null && it.episodeNumber == null }
+    if (isMovie) {
+        val stream = mapped.first()
+        val cursor = StreamCursor(
+            season = 0,
+            episode = 0,
+            progressSeconds = stream.watchedProgressSeconds,
+            episodeName = stream.episodeName
+        )
+        return stream to cursor
     }
 
     if (targetSeason != null && targetEpisode != null) {
