@@ -4,9 +4,12 @@ import kotlinx.rpc.annotations.Rpc
 import org.ensodai.avalonmediacard.contract.admin.AdminActionResponse
 import org.ensodai.avalonmediacard.contract.admin.CreateUserRequest
 import org.ensodai.avalonmediacard.contract.admin.GlobalIntegrationSettingsDto
+import org.ensodai.avalonmediacard.contract.admin.PluginProxySettingDto
 import org.ensodai.avalonmediacard.contract.admin.ServerSystemInfoDto
+import org.ensodai.avalonmediacard.contract.admin.TestPluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateGlobalIntegrationSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateJackettSettingsRequest
+import org.ensodai.avalonmediacard.contract.admin.UpdatePluginProxyRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateProwlarrSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTmdbSettingsRequest
 import org.ensodai.avalonmediacard.contract.admin.UpdateTorrServerSettingsRequest
@@ -34,6 +37,10 @@ interface AdminRpcService {
     suspend fun testTorrServerConnection(host: String, login: String?, password: String?): AdminActionResponse
     suspend fun testProwlarrConnection(url: String, apiKey: String): AdminActionResponse
     suspend fun testJackettConnection(url: String, apiKey: String): AdminActionResponse
+
+    suspend fun getPluginProxySettings(): List<PluginProxySettingDto>
+    suspend fun updatePluginProxySetting(request: UpdatePluginProxyRequest): AdminActionResponse
+    suspend fun testPluginProxy(request: TestPluginProxyRequest): AdminActionResponse
 
     suspend fun getSystemInfo(): ServerSystemInfoDto
     suspend fun clearDiscoverCache(): AdminActionResponse
