@@ -17,6 +17,7 @@ interface Navigation {
     fun navigateToCustomList(listId: Uuid, title: String)
     fun navigateToSearch(initialQuery: String)
     fun navigateToEpisodesNotifications()
+    fun navigateToStats()
     fun navigateTo(screen: Screen)
     fun navigateBack()
 }

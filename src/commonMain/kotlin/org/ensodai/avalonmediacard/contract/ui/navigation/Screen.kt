@@ -29,6 +29,9 @@ sealed interface Screen {
     data object MyCollection : Screen
 
     @Serializable
+    data object Stats : Screen
+
+    @Serializable
     data object Admin : Screen
 
     @Serializable
