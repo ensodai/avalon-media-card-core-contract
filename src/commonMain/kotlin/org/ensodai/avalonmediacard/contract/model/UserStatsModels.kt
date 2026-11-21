@@ -178,3 +178,33 @@ data class ActivityHeatmapDto(
     val peakDayMinutes: Long
 )
 
+/**
+ * Элемент активности за день (просмотренный фильм или серия).
+ */
+@Serializable
+data class DayActivityItemDto(
+    val mediaKey: MediaKey,
+    val title: String,
+    val posterUrl: String?,
+    val isEpisode: Boolean,
+    val seasonNumber: Int?,
+    val episodeNumber: Int?,
+    val episodeTitle: String?,
+    val watchedMinutes: Int,
+    val durationMinutes: Int,
+    val isCompleted: Boolean,
+    val userRating: Int?
+)
+
+/**
+ * Детальная сводка активности пользователя за конкретный календарный день.
+ */
+@Serializable
+data class DayActivityDto(
+    val date: String,
+    val totalMinutes: Long,
+    val items: List<DayActivityItemDto>,
+    val averageRating: Double?
+)
+
+
