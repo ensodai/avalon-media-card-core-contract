@@ -3,6 +3,7 @@ package org.ensodai.avalonmediacard.contract.ui.navigation
 import kotlinx.serialization.Serializable
 import org.ensodai.avalonmediacard.contract.model.EntityType
 import org.ensodai.avalonmediacard.contract.model.MediaKey
+import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
 import kotlin.uuid.Uuid
 
 @Serializable
@@ -75,6 +76,12 @@ sealed interface Screen {
     data class MediaList(
         val key: MediaKey,
         val listType: String,
+        val title: String
+    ) : Screen
+
+    @Serializable
+    data class UserMediaList(
+        val filter: UserMediaFilter,
         val title: String
     ) : Screen
 

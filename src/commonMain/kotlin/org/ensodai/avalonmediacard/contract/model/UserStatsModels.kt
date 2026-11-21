@@ -14,7 +14,8 @@ data class UserStatsDto(
     val ratingDistribution: RatingDistributionDto,
     val topPeople: TopPeopleStatsDto,
     val archetype: ArchetypeDto?,
-    val decadesBreakdown: List<DecadeStatDto>
+    val decadesBreakdown: List<DecadeStatDto>,
+    val activityHeatmap: ActivityHeatmapDto
 )
 
 /**
@@ -60,7 +61,11 @@ data class LibraryStatsDto(
     val watchingShowsCount: Int,
     val completedShowsCount: Int,
     val onHoldShowsCount: Int,
-    val dnfShowsCount: Int
+    val dnfShowsCount: Int,
+    val watchingMoviesCount: Int,
+    val completedMoviesCount: Int,
+    val onHoldMoviesCount: Int,
+    val dnfMoviesCount: Int
 )
 
 /**
@@ -148,3 +153,28 @@ data class DecadeStatDto(
     val startYear: Int,
     val watchedCount: Int
 )
+
+/**
+ * Данные активности за один календарный день для тепловой карты.
+ */
+@Serializable
+data class HeatmapDayDto(
+    val date: String,
+    val minutes: Long,
+    val count: Int,
+    val avgRating: Double?
+)
+
+/**
+ * Годовая тепловая карта активности синефила (52 недели).
+ */
+@Serializable
+data class ActivityHeatmapDto(
+    val days: List<HeatmapDayDto>,
+    val totalActiveDays: Int,
+    val currentStreakDays: Int,
+    val longestStreakDays: Int,
+    val peakDayDate: String?,
+    val peakDayMinutes: Long
+)
+
