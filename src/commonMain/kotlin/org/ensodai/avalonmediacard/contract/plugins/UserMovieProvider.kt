@@ -1,6 +1,10 @@
 package org.ensodai.avalonmediacard.contract.plugins
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import org.ensodai.avalonmediacard.contract.model.MediaKey
 import org.ensodai.avalonmediacard.contract.model.UserEpisodeItem
+import org.ensodai.avalonmediacard.contract.model.UserMediaFilter
 import org.ensodai.avalonmediacard.contract.model.UserMovieItem
 import kotlin.uuid.Uuid
 
@@ -9,7 +13,9 @@ import kotlin.uuid.Uuid
  */
 interface UserMovieProvider {
     suspend fun getUserMovies(userId: Uuid): List<UserMovieItem>
-    fun observeUserMovies(userId: Uuid): kotlinx.coroutines.flow.Flow<List<UserMovieItem>>
+    fun observeUserMovies(userId: Uuid): Flow<List<UserMovieItem>>
+    suspend fun getUserMediaKeys(userId: Uuid, filter: UserMediaFilter): List<MediaKey> = emptyList()
+    fun observeUserMediaKeys(userId: Uuid, filter: UserMediaFilter): Flow<List<MediaKey>> = flowOf(emptyList())
     suspend fun updateUserMovie(item: UserMovieItem): Boolean
     suspend fun deleteUserMovie(userId: Uuid, mediaId: String): Boolean
     suspend fun getUserEpisodes(userId: Uuid, mediaId: String): List<UserEpisodeItem>
